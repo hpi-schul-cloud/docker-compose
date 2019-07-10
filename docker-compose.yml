@@ -15,7 +15,7 @@ services:
   server:
     #image: schulcloud/schulcloud-server:latest
     build:
-      context: ./schulcloud-server
+      context: ../schulcloud-server
       dockerfile: Dockerfile
     volumes:
       - ./schulcloud-server:/schulcloud-server
@@ -57,9 +57,9 @@ services:
   ### Schul-Cloud Client
   ###
   client:
-    #image: schulcloud/schulcloud-client:latest
+    image: schulcloud/schulcloud-client:develop
     build:
-      context: ./schulcloud-client
+      context: ../schulcloud-client
       dockerfile: Dockerfile
     volumes:
       - ./schulcloud-client:/home/node/app
@@ -192,7 +192,7 @@ services:
   filepreview:
     image: schulcloud/filepreview:latest
     build:
-      context: ./filepreview
+      context: ../filepreview
       dockerfile: Dockerfile
     environment:
       USERNAME: filepreview
