@@ -1,0 +1,13 @@
+version: "3"
+
+services:
+
+### Libre Office
+  ###
+  libreoffice:
+    image: schulcloud/libreoffice:latest
+    ports:
+      - "9980:9980"
+    environment:
+      domain: localhost:9980
+    restart: always

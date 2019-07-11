@@ -18,7 +18,7 @@ services:
       context: ../schulcloud-server
       dockerfile: Dockerfile
     volumes:
-      - ./schulcloud-server:/schulcloud-server
+      - ../schulcloud-server:/schulcloud-server
     depends_on:
       - server-mongodb
     environment:
@@ -58,12 +58,13 @@ services:
   ### Schul-Cloud Client
   ###
   client:
-    image: schulcloud/schulcloud-client:develop
+    #image: schulcloud/schulcloud-client:develop
     build:
       context: ../schulcloud-client
       dockerfile: Dockerfile
+    command: npm run debug
     volumes:
-      - ./schulcloud-client:/home/node/app
+      - ../schulcloud-client:/home/node/app
     depends_on:
       - server
     environment:
@@ -90,6 +91,7 @@ services:
       - EDTR_SOURCE=https://cdn.jsdelivr.net/gh/schul-cloud/edtrio@e9d3bb9d66092bafa07846269c8fc6f9d5fb0559/dist/index.js 
     ports:
       - "3100:3100"
+      - "9310:9310" #debug port
     restart: always
   ###
 
@@ -171,15 +173,7 @@ services:
     command: server /data
   ###
   
-  ### Libre Office
-  ###
-  libreoffice:
-    image: schulcloud/libreoffice:n21-latest
-    ports:
-      - "9980:9980"
-    environment:
-      domain: localhost:9980
-    restart: always
+  
   
   ### Filepreview
   ###
