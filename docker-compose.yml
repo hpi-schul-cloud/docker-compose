@@ -10,7 +10,7 @@ services:
       - "27017:27017"
     volumes:
       - data-server-mongodb:/data/db
-    restart: always
+    restart: unless-stopped
 
   server:
     #image: schulcloud/schulcloud-server:latest
@@ -52,7 +52,7 @@ services:
       - IGNORE_DISCOVERABILITY=true
     ports:
       - "3030:3030"
-    restart: always
+    restart: unless-stopped
   ###
 
   ### Schul-Cloud Client
@@ -92,7 +92,7 @@ services:
     ports:
       - "3100:3100"
       - "9310:9310" #debug port
-    restart: always
+    restart: unless-stopped
   ###
 
   ### Schul-Cloud Calendar
@@ -107,7 +107,7 @@ services:
       - POSTGRES_DB=schulcloud_calendar
       - POSTGRES_USER=node
       - POSTGRES_PASSWORD=genericpassword
-    restart: always
+    restart: unless-stopped
 
   calendar:
     image: langleu/schulcloud-calendar
@@ -129,7 +129,7 @@ services:
       - SCHULCLOUD_ALL_USERS_FOR_UUID=http://server:3030/resolve/users/
       - SCHULCLOUD_ALL_SCOPES_FOR_TOKEN=http://server:3030/resolve/scopes/
       - NOTIFICATION_SERVICE_NEW_NOTIFICATION=http://notification:3040/messages
-    restart: always
+    restart: unless-stopped
     command: npm start
   ###
 
@@ -150,7 +150,7 @@ services:
       - server
     ports:
       - 3033:3033
-    restart: always
+    restart: unless-stopped
   ###
   
   ### Schul-Cloud Content
@@ -169,7 +169,7 @@ services:
     environment:
       MINIO_ACCESS_KEY: Gk2BesGTs358rkdUfqJM
       MINIO_SECRET_KEY: YVMm78fFua2HnhbqTAfMboZuDzadXyFHgrWxXjRZ
-    restart: always
+    restart: unless-stopped
     command: server /data
   ###
   
@@ -183,6 +183,7 @@ services:
     hostname: redis
     networks:
       - redis-net
+    restart: unless-stopped
 
   filepreview:
     image: schulcloud/filepreview:latest
@@ -199,6 +200,7 @@ services:
       - redis-net
     depends_on:
       - redis
+    restart: unless-stopped
 
   ###
 
