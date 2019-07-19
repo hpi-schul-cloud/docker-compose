@@ -1,6 +1,22 @@
 version: "3"
 
 services:
+
+
+  ### nginx
+  #nginx:
+  #  image: nginx
+  #  depends_on:
+  #   - s3-storage
+  #  volumes:
+  #    - ../nginx:/etc/nginx/:ro
+  #  ports:
+  #    - 8081:80
+  #  networks:
+  #    - storage
+  #    - default
+
+  ###
   
   ### Schul-Cloud Server
   ###
@@ -24,6 +40,7 @@ services:
       - server-mongodb
     environment:
       # ENV
+      - NODE_ENV=production
       - HOST=http://localhost:3030
       - SC_TITLE=HPI Schulcloud
       - SC_SHORT_TITLE=Schulcloud
@@ -31,7 +48,8 @@ services:
       - SMTP=smtp://user:$Pass@mail.de
       - SMTP_SENDER=user@mail.de
       # Storage
-      - AWS_ENDPOINT_URL=http://s3-storage:9000
+      - AWS_ENDPOINT_URL=http://storage.test.schul-cloud.org
+      #- AWS_ENDPOINT_URL=http://localhost:9000
       ## keys for local s3 storage
       - AWS_ACCESS_KEY=Gk2BesGTs358rkdUfqJM
       - AWS_SECRET_ACCESS_KEY=YVMm78fFua2HnhbqTAfMboZuDzadXyFHgrWxXjRZ
@@ -52,11 +70,14 @@ services:
       - IGNORE_DISCOVERABILITY=true
       # file preview service
       - ENABLE_THUMBNAIL_GENERATION=true
-      - FILEPREVIEW_SERVICE_URI=http://filepreview:3000/filepreview
+      - FILE_PREVIEW_SERVICE_URI=http://filepreview:3000/filepreview
       - FILE_PREVIEW_CALLBACK_URI=http://server:3030/fileStorage/thumbnail/
     ports:
       - "3030:3030"
       - "5959:5959"
+    networks:
+      - storage
+      - default
     restart: unless-stopped
   ###
 
@@ -67,11 +88,11 @@ services:
     build:
       context: ../schulcloud-client
       dockerfile: Dockerfile
-    command: npm run debug
     volumes:
       - ../schulcloud-client:/home/node/app
     depends_on:
       - server
+      - client-gulp
     environment:
       # ENV
       - NODE_ENV=development
@@ -98,28 +119,47 @@ services:
       - "3100:3100"
       - "9310:9310" #debug port
     restart: unless-stopped
+    command: npm run debug:container
   ###
+
+  client-gulp:
+    build:
+      context: ../schulcloud-client
+      dockerfile: Dockerfile
+    volumes:
+      - ../schulcloud-client:/home/node/app
+    environment:
+      - NODE_ENV=development
+    command: bash -c 'gulp clear && gulp watch'
+    restart: unless-stopped
 
   ### Schul-Cloud Calendar
   ###
   calendar-postgres:
     image: postgres:9.5
     ports:
-      - "5432"
+      - "5432:5432"
     volumes:
       - 'data-calendar-postgres:/var/lib/postgresql/data'
+      - 'postgres-init:/docker-entrypoint-initdb.d'
     environment:
       - POSTGRES_DB=schulcloud_calendar
       - POSTGRES_USER=node
       - POSTGRES_PASSWORD=genericpassword
     restart: unless-stopped
 
+
   calendar:
-    image: langleu/schulcloud-calendar
+    image: schulcloud/schulcloud-calendar
+    build:
+      context: ../schulcloud-calendar
+      dockerfile: Dockerfile.develop
     ports:
       - "3000"
     depends_on:
       - calendar-postgres
+    volumes:
+      - 'postgres-init:/docker-entrypoint-initdb.d'
     environment:
       # ENV
       - NODE_ENV=production
@@ -136,6 +176,7 @@ services:
       - NOTIFICATION_SERVICE_NEW_NOTIFICATION=http://notification:3040/messages
     restart: unless-stopped
     command: npm start
+
   ###
 
   ### Schul-Cloud Notifications
@@ -149,21 +190,7 @@ services:
   
   ###
 
-  ### S3 Storage
-  ###
-  s3-storage:
-    image: minio/minio
-    volumes:
-      - data-s3-storage:/data
-    ports:
-      - 9000:9000
-    environment:
-      MINIO_ACCESS_KEY: Gk2BesGTs358rkdUfqJM
-      MINIO_SECRET_KEY: YVMm78fFua2HnhbqTAfMboZuDzadXyFHgrWxXjRZ
-    restart: unless-stopped
-    command: server /data
-  ###
-  
+
   
   
   ### Filepreview
@@ -186,15 +213,22 @@ services:
       PASSWORD: strongPassword
       REDIS_HOST: redis
     ports:
-      - "3000:3000"
+      - "3000"
+    networks:
+      - default
+      - storage
     depends_on:
       - redis
     restart: unless-stopped
 
   ###
-
 networks:
-  redis-net:
+  storage:
+    ipam:
+      driver: default
+      config:
+        - subnet: "172.16.13.0/24"
+
 
 
 volumes:
@@ -202,3 +236,4 @@ volumes:
   data-calendar-postgres:
   data-s3-storage:
   db-data:
+  postgres-init:
