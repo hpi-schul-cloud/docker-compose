@@ -33,7 +33,6 @@ services:
     build:
       context: ../schulcloud-server
       dockerfile: Dockerfile
-    command: npm run debug
     volumes:
       - ../schulcloud-server:/schulcloud-server
     depends_on:
@@ -45,14 +44,14 @@ services:
       - SC_TITLE=HPI Schulcloud
       - SC_SHORT_TITLE=Schulcloud
       # SMTP
-      - SMTP=smtp://user:$Pass@mail.de
-      - SMTP_SENDER=user@mail.de
+      - SMTP=smtps://nodejs.smtp@gmail.com:trolololol987!..@smtp.gmail.com
+      - SMTP_SENDER=nodejs.smtp@gmail.com
       # Storage
-      - AWS_ENDPOINT_URL=http://storage.test.schul-cloud.org
+      - AWS_ENDPOINT_URL=https://dev-storage.schul-cloud.org:9001
       #- AWS_ENDPOINT_URL=http://localhost:9000
       ## keys for local s3 storage
-      - AWS_ACCESS_KEY=Gk2BesGTs358rkdUfqJM
-      - AWS_SECRET_ACCESS_KEY=YVMm78fFua2HnhbqTAfMboZuDzadXyFHgrWxXjRZ
+      - AWS_ACCESS_KEY=sc-devteam
+      - AWS_SECRET_ACCESS_KEY=kahsuL3Joxohk8Ohz?oraixe
       # URIs and Port
       - MONGO_URI=mongodb://server-mongodb:27017/schulcloud
       - DB_URL=mongodb://server-mongodb:27017/schulcloud
@@ -79,6 +78,7 @@ services:
       - storage
       - default
     restart: unless-stopped
+    command: npm run debug:container
   ###
 
   ### Schul-Cloud Client
@@ -90,12 +90,13 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ../schulcloud-client:/home/node/app
+      - /home/node/app/build
     depends_on:
       - server
-      - client-gulp
     environment:
       # ENV
       - NODE_ENV=development
+      - DOCKER=true
       - CALENDAR_SERVICE_ENABLED=true
       #- TZ=Europe/Berlin
       # Theme and Titles
@@ -114,24 +115,15 @@ services:
       # FEATURE TOGGLES
       - FEATURE_TEAMS_ENABLED=true
       - ROCKETCHAT_SERVICE_ENABLED=true
-      - EDTR_SOURCE=https://cdn.jsdelivr.net/gh/schul-cloud/edtrio@e9d3bb9d66092bafa07846269c8fc6f9d5fb0559/dist/index.js 
+      - EDTR_SOURCE=https://cdn.jsdelivr.net/gh/schul-cloud/edtrio@e9d3bb9d66092bafa07846269c8fc6f9d5fb0559/dist/index.js
     ports:
       - "3100:3100"
       - "9310:9310" #debug port
+      - "7000:7000"
     restart: unless-stopped
-    command: npm run debug:container
+    command: bash -c "gulp & gulp watch-reload"
   ###
 
-  client-gulp:
-    build:
-      context: ../schulcloud-client
-      dockerfile: Dockerfile
-    volumes:
-      - ../schulcloud-client:/home/node/app
-    environment:
-      - NODE_ENV=development
-    command: bash -c 'gulp clear && gulp watch'
-    restart: unless-stopped
 
   ### Schul-Cloud Calendar
   ###
