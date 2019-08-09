@@ -17,7 +17,21 @@ services:
   #    - default
 
   ###
-  
+
+  ### Schul-Cloud Recommender
+  rabbitmq:
+    image: rabbitmq:3.7.16-management
+    hostname: rabbit
+    container_name: rabbit
+    labels:
+      name: "rabbitmq"
+    volumes:
+      - ./rabbitmq-isolated.config:/etc/rabbitmq/rabbitmq.config
+      - ./definitions.json:/etc/rabbitmq/definitions.json
+    ports:
+      - 15672:15672
+      - 5672:5672
+
   ### Schul-Cloud Server
   ###
   server-mongodb:
@@ -121,7 +135,7 @@ services:
       - "9310:9310" #debug port
       - "7000:7000"
     restart: unless-stopped
-    command: bash -c "gulp & gulp watch-reload"
+    command: bash -c "npm rebuild node-sass & gulp & gulp watch-reload"
   ###
 
 
