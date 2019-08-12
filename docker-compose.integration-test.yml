@@ -48,9 +48,6 @@ services:
     ports:
       - "3030:3030"
       - "5959:5959"
-    networks:
-      - storage
-      - default
     restart: unless-stopped
     command: npm run debug:container
   ###
@@ -129,12 +126,5 @@ services:
     restart: unless-stopped
     command: npm run start
 
-
-
-
 volumes:
   data-server-mongodb:
-  data-calendar-postgres:
-  data-s3-storage:
-  db-data:
-  postgres-init:
