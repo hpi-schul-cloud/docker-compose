@@ -1,0 +1,140 @@
+version: "3"
+
+services:
+  ### Schul-Cloud Server
+  ###
+  server-mongodb:
+    image: mongo:4.0
+    ports:
+      - "27017:27017"
+    volumes:
+      - data-server-mongodb:/data/db
+    restart: unless-stopped
+
+  server:
+    #image: schulcloud/schulcloud-server:latest
+    build:
+      context: ../schulcloud-server
+      dockerfile: Dockerfile
+    depends_on:
+      - server-mongodb
+    environment:
+      # ENV
+      - NODE_ENV=production
+      - HOST=http://localhost:3030
+      - SC_TITLE=HPI Schulcloud
+      - SC_SHORT_TITLE=Schulcloud
+      # SMTP
+      - SMTP=smtps://nodejs.smtp@gmail.com:trolololol987!..@smtp.gmail.com
+      - SMTP_SENDER=nodejs.smtp@gmail.com
+      # Storage
+      - AWS_ENDPOINT_URL=https://dev-storage.schul-cloud.org:9001
+      #- AWS_ENDPOINT_URL=http://localhost:9000
+      ## keys for local s3 storage
+      - AWS_ACCESS_KEY=sc-devteam
+      - AWS_SECRET_ACCESS_KEY=kahsuL3Joxohk8Ohz?oraixe
+      # URIs and Port
+      - MONGO_URI=mongodb://server-mongodb:27017/schulcloud
+      - DB_URL=mongodb://server-mongodb:27017/schulcloud
+      - PORT=3030
+      # RocketChat
+      - ROCKET_CHAT_URI=https://chat.schulcloud.local
+      # - ROCKET_CHAT_ADMIN_TOKEN=
+      # - ROCKET_CHAT_ADMIN_TOKEN=
+      # - ROCKET_CHAT_ADMIN_ID=
+      # AUTH Secret
+      - AUTHENTICATION=4QF8s3GdIr0y+cSM7q65qhI2QMqVU5Re/o7y9hRIJf9RbOkRHX91ZhnsiwOB6/bPhVu8KRAh7LAq2KbB0qpfep1xBaIHr+vz0Q0BelbNWFvMwpojG75AObL/SZjpEba2K09+uSlo7THCgt+j52OtefXjEZe8lUdTwbD++2euNVvJOiLWUL2WBdb+OrQF7hqUJq9J/YSg8Zpop/5keGi5Dz9KJjG/fXyoX58q+E2sOBDaLzB3CMCzAPEm7jimxi9ONPw7QEPqiHgLA3f0xNRuOXwcGrYt9vAWvVEcIQbVqQ4Q2zcu8HRmo5MRgZwbK4gmhiyzUdc95IBnvPF/YfdDX2e4S6vtjoWPbzIBUEYR+s972yCQ0QHgQXraS8EyST13mhg7SVBVGG0yfWLP5yPg+x5gkj/0EgR868mpKWWEYfcM/paPnLStzGJcEKFCcof8t2uIbeyWPjQM4cHbOCDe/cD2eQXREhlOxOxfj5ghK1WofkPJAzt0Bc+d7kJtWx9Fn1EgE5xEijTZt7FgmPEU8Xlq/gbY5tx3q3NImuoeorqGhsYdcIUShynXR9cMMsz5DLDjMSSgObG6NnQ9CGVidmof+hO1imaFXPu5KMD+02RQdzVMWGClrq1HEJMQF3BiAl/b/wPv5WkbjHWhWApLdmqvRCfPDrEDCN9ocZcUjLQ=
+      - IGNORE_DISCOVERABILITY=true
+    ports:
+      - "3030:3030"
+      - "5959:5959"
+    networks:
+      - storage
+      - default
+    restart: unless-stopped
+    command: npm run debug:container
+  ###
+
+  ### Schul-Cloud Client
+  ###
+  client:
+    #image: schulcloud/schulcloud-client:develop
+    build:
+      context: ../schulcloud-client
+      dockerfile: Dockerfile
+    depends_on:
+      - server
+    environment:
+      # ENV
+      - NODE_ENV=development
+      - DOCKER=true
+      - CALENDAR_SERVICE_ENABLED=true
+      #- TZ=Europe/Berlin
+      # Theme and Titles
+      - SC_TITLE=HPI Schulcloud
+      - SC_SHORT_TITLE=Schulcloud
+      - SC_PRODUCTNAME=Hauptschule
+      - SC_FEDERALSTATE=mainstate
+      # Google
+      #- GOOGLE_ANALYTICS_TRACKING_ID="UA-155982548-1"
+      # URIs
+      - HOST=http://localhost:3100
+      - BACKEND_URL=http://server:3030
+      - PUBLIC_BACKEND_URL=https://localhost:3030
+        # - LIBRE_OFFICE_CLIENT_URL=http://localhost:9980
+        # - ROCKET_CHAT_URI=https://chat.schulcloud.local
+      # FEATURE TOGGLES
+        # - FEATURE_TEAMS_ENABLED=true
+        # - ROCKETCHAT_SERVICE_ENABLED=true
+        # - EDTR_SOURCE=https://cdn.jsdelivr.net/gh/schul-cloud/edtrio@e9d3bb9d66092bafa07846269c8fc6f9d5fb0559/dist/index.js
+    ports:
+      - "3100:3100"
+    restart: unless-stopped
+    command: npm run start
+
+  ### Integration Tests
+  ###
+  client:
+    #image: schulcloud/schulcloud-client:develop
+    build:
+      context: ../schulcloud-client
+      dockerfile: Dockerfile
+    depends_on:
+      - server
+    environment:
+      # ENV
+      - NODE_ENV=development
+      - DOCKER=true
+      - CALENDAR_SERVICE_ENABLED=true
+      #- TZ=Europe/Berlin
+      # Theme and Titles
+      - SC_TITLE=HPI Schulcloud
+      - SC_SHORT_TITLE=Schulcloud
+      - SC_PRODUCTNAME=Hauptschule
+      - SC_FEDERALSTATE=mainstate
+      # Google
+      #- GOOGLE_ANALYTICS_TRACKING_ID="UA-155982548-1"
+      # URIs
+      - HOST=http://localhost:3100
+      - BACKEND_URL=http://server:3030
+      - PUBLIC_BACKEND_URL=https://localhost:3030
+        # - LIBRE_OFFICE_CLIENT_URL=http://localhost:9980
+        # - ROCKET_CHAT_URI=https://chat.schulcloud.local
+      # FEATURE TOGGLES
+        # - FEATURE_TEAMS_ENABLED=true
+        # - ROCKETCHAT_SERVICE_ENABLED=true
+        # - EDTR_SOURCE=https://cdn.jsdelivr.net/gh/schul-cloud/edtrio@e9d3bb9d66092bafa07846269c8fc6f9d5fb0559/dist/index.js
+    ports:
+      - "3100:3100"
+    restart: unless-stopped
+    command: npm run start
+
+
+
+
+volumes:
+  data-server-mongodb:
+  data-calendar-postgres:
+  data-s3-storage:
+  db-data:
+  postgres-init:
