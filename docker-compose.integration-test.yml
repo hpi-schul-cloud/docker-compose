@@ -20,7 +20,7 @@ services:
       - server-mongodb
     environment:
       # ENV
-      - NODE_ENV=production
+      - NODE_ENV=test
       - HOST=http://localhost:3030
       - SC_TITLE=HPI Schulcloud
       - SC_SHORT_TITLE=Schulcloud
@@ -87,7 +87,7 @@ services:
     ports:
       - "3100:3100"
     restart: unless-stopped
-    command: NODE_ENV=test && npm run seed && npm run start
+    command: npm run start
 
   # Selenium Server
   selenium-hub:
