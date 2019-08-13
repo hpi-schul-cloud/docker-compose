@@ -49,7 +49,7 @@ services:
       - "3030:3030"
       - "5959:5959"
     restart: unless-stopped
-    command: npm run debug:container
+    command: npm run start
   ###
 
   ### Schul-Cloud Client
@@ -87,7 +87,7 @@ services:
     ports:
       - "3100:3100"
     restart: unless-stopped
-    command: npm run start
+    command: NODE_ENV=test && npm run seed && npm run start
 
   # Selenium Server
   selenium-hub:
