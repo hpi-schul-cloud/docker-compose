@@ -89,42 +89,30 @@ services:
     restart: unless-stopped
     command: npm run start
 
-  ### Integration Tests
-  ###
-  client:
-    #image: schulcloud/schulcloud-client:develop
-    build:
-      context: ../schulcloud-client
-      dockerfile: Dockerfile
-    depends_on:
-      - server
-    environment:
-      # ENV
-      - NODE_ENV=development
-      - DOCKER=true
-      - CALENDAR_SERVICE_ENABLED=true
-      #- TZ=Europe/Berlin
-      # Theme and Titles
-      - SC_TITLE=HPI Schulcloud
-      - SC_SHORT_TITLE=Schulcloud
-      - SC_PRODUCTNAME=Hauptschule
-      - SC_FEDERALSTATE=mainstate
-      # Google
-      #- GOOGLE_ANALYTICS_TRACKING_ID="UA-155982548-1"
-      # URIs
-      - HOST=http://localhost:3100
-      - BACKEND_URL=http://server:3030
-      - PUBLIC_BACKEND_URL=https://localhost:3030
-        # - LIBRE_OFFICE_CLIENT_URL=http://localhost:9980
-        # - ROCKET_CHAT_URI=https://chat.schulcloud.local
-      # FEATURE TOGGLES
-        # - FEATURE_TEAMS_ENABLED=true
-        # - ROCKETCHAT_SERVICE_ENABLED=true
-        # - EDTR_SOURCE=https://cdn.jsdelivr.net/gh/schul-cloud/edtrio@e9d3bb9d66092bafa07846269c8fc6f9d5fb0559/dist/index.js
+  # Selenium Server
+  selenium-hub:
+    image: selenium/hub:3.141.59-titanium
+    container_name: selenium-hub
     ports:
-      - "3100:3100"
-    restart: unless-stopped
-    command: npm run start
+      - "4444:4444"
+  chrome:
+    image: selenium/node-chrome:3.141.59-titanium
+    volumes:
+      - /dev/shm:/dev/shm
+    depends_on:
+      - selenium-hub
+    environment:
+      - HUB_HOST=selenium-hub
+      - HUB_PORT=4444
+  firefox:
+    image: selenium/node-firefox:3.141.59-titanium
+    volumes:
+      - /dev/shm:/dev/shm
+    depends_on:
+      - selenium-hub
+    environment:
+      - HUB_HOST=selenium-hub
+      - HUB_PORT=4444
 
 volumes:
   data-server-mongodb:
