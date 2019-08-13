@@ -20,7 +20,7 @@ services:
       - server-mongodb
     environment:
       # ENV
-      - NODE_ENV=test
+      - NODE_ENV=default
       - HOST=http://localhost:3030
       - SC_TITLE=HPI Schulcloud
       - SC_SHORT_TITLE=Schulcloud
@@ -34,8 +34,8 @@ services:
       - AWS_ACCESS_KEY=sc-devteam
       - AWS_SECRET_ACCESS_KEY=kahsuL3Joxohk8Ohz?oraixe
       # URIs and Port
-      - MONGO_URI=mongodb://server-mongodb:27017/schulcloud-test
-      - DB_URL=mongodb://server-mongodb:27017/schulcloud-test
+      - MONGO_URI=mongodb://server-mongodb:27017/schulcloud
+      - DB_URL=mongodb://server-mongodb:27017/schulcloud
       - PORT=3030
       # RocketChat
       - ROCKET_CHAT_URI=https://chat.schulcloud.local
@@ -47,6 +47,7 @@ services:
       - IGNORE_DISCOVERABILITY=true
     ports:
       - "3030:3030"
+      - "5959:5959"
     restart: unless-stopped
     command: npm run start
   ###
