@@ -34,8 +34,8 @@ services:
       - AWS_ACCESS_KEY=sc-devteam
       - AWS_SECRET_ACCESS_KEY=kahsuL3Joxohk8Ohz?oraixe
       # URIs and Port
-      - MONGO_URI=mongodb://server-mongodb:27017/schulcloud
-      - DB_URL=mongodb://server-mongodb:27017/schulcloud
+      - MONGO_URI=mongodb://server-mongodb:27017/schulcloud-test
+      - DB_URL=mongodb://server-mongodb:27017/schulcloud-test
       - PORT=3030
       # RocketChat
       - ROCKET_CHAT_URI=https://chat.schulcloud.local
@@ -47,7 +47,6 @@ services:
       - IGNORE_DISCOVERABILITY=true
     ports:
       - "3030:3030"
-      - "5959:5959"
     restart: unless-stopped
     command: npm run start
   ###
