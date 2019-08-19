@@ -12,10 +12,7 @@ services:
     restart: unless-stopped
 
   server:
-    #image: schulcloud/schulcloud-server:latest
-    build:
-      context: ../schulcloud-server
-      dockerfile: Dockerfile
+    image: schulcloud/schulcloud-server:develop
     depends_on:
       - server-mongodb
     environment:
@@ -55,10 +52,7 @@ services:
   ### Schul-Cloud Client
   ###
   client:
-    #image: schulcloud/schulcloud-client:develop
-    build:
-      context: ../schulcloud-client
-      dockerfile: Dockerfile
+    image: schulcloud/schulcloud-client:develop
     depends_on:
       - server
     environment:
