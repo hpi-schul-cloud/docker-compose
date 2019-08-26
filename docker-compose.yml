@@ -32,6 +32,16 @@ services:
       - 15672:15672
       - 5672:5672
 
+  nifi:
+    image: apache/nifi:1.9.2
+    volumes:
+      - ./nifi_conf/:/opt/nifi/nifi-1.9.2/conf/
+    environment:
+        - RABBIT_AMQ=rabbit
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+      
   ### Schul-Cloud Server
   ###
   server-mongodb:
