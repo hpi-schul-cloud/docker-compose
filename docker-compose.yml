@@ -1,4 +1,4 @@
-version: "3"
+version: "3.7"
 
 services:
 
@@ -19,10 +19,8 @@ services:
   ###
 
   ### Schul-Cloud Recommender
-  rabbitmq:
+  rabbit:
     image: rabbitmq:3.7.16-management
-    hostname: rabbit
-    container_name: rabbit
     labels:
       name: "rabbitmq"
     volumes:
@@ -237,6 +235,58 @@ services:
       - redis
     restart: unless-stopped
 
+  nuxtclient:
+    image: schulcloud/schulcloud-nuxt-client:develop
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: any
+    depends_on:
+      - server
+    environment:
+      # ENV
+      - NODE_ENV=production
+      - TZ=Europe/Berlin
+#      - NUXT_HOST=0.0.0.0
+#      - NUXT_PORT=4004
+      - HOST=0.0.0.0
+      - PORT=4000
+#      - API_HOST=api.hackathon.schul-cloud.org
+#      - API_PORT=80
+#      - API_URL=https://api.hackathon.schul-cloud.org
+      - API_URL=http://server:3030
+      # Theme and Titles
+      - SC_THEME=default
+      - SC_TITLE=Schul-Cloud
+      - SC_PRODUCTNAME=Schul-Cloud
+      - KEEP_ALIVE=true
+      - SHOW_VERSION=1
+      # Google
+      - GOOGLE_ANALYTICS_TRACKING_ID=UA-909651848-1
+      - SW_ENABLED=true
+      - SW_GOOGLE_ANALYTICS_TRACKING_ID=UA-125027186-1
+      # Nexboard
+      - NEXBOARD_API_KEY=blablablub
+      - NEXBOARD_USER_ID=123
+      # URIs
+#      - HOST=https://nuxt.test.schul-cloud.org
+      - BACKEND_URL=http://server:3030
+      - PUBLIC_BACKEND_URL=https://api.test.schul-cloud.org
+      # - PUBLIC_BACKEND_URL=https://test.schul-cloud.org/api
+      - LIBRE_OFFICE_CLIENT_URL=https://libreoffice.test.schul-cloud.org
+      # Rocketchat
+      - ROCKET_CHAT_URI=https://chat.test.schul-cloud.org
+      - ROCKET_CHAT=https://chat.test.schul-cloud.org
+      # FEATURE TOGGLE
+      - CALENDAR_SERVICE_ENABLED=true
+      - FEATURE_TEAMS_ENABLED=true
+      - ROCKETCHAT_SERVICE_ENABLED=true
+      # EDTR
+      - EDTR_SOURCE=https://cdn.jsdelivr.net/gh/schul-cloud/edtrio@3b12905948e969cb673d84ee339f1fe6ddeafc35/dist/index.js
+    ports:
+      - "3200:4000"
+    restart: always
+
   ###
 networks:
   storage:
@@ -244,6 +294,8 @@ networks:
       driver: default
       config:
         - subnet: "172.16.13.0/24"
+
+
 
 
 
