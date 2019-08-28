@@ -12,7 +12,6 @@ services:
     restart: unless-stopped
 
   server:
-    #image: schulcloud/schulcloud-server:latest
     build:
       context: ../schulcloud-server
       dockerfile: Dockerfile
@@ -55,7 +54,6 @@ services:
   ### Schul-Cloud Client
   ###
   client:
-    #image: schulcloud/schulcloud-client:develop
     build:
       context: ../schulcloud-client
       dockerfile: Dockerfile
