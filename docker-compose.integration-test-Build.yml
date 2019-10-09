@@ -118,8 +118,6 @@ services:
     environment:
       - HUB_HOST=selenium-hub
       - HUB_PORT=4444
-      # BRUTE FORCE PROTECTION
-      - LOGIN_BLOCK_TIME=3
 
 volumes:
   data-server-mongodb:
