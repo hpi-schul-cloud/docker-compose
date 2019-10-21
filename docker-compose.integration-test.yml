@@ -92,6 +92,28 @@ services:
     restart: unless-stopped
     command: npm run start
 
+  nuxtclient:
+    build:
+      context: ../nuxt-client
+      dockerfile: deploy/Dockerfile.client
+    depends_on:
+      - server
+      - client
+    environment:
+      # ENV
+      - NODE_ENV=production
+      - TZ=Europe/Berlin
+      - LEGACY_CLIENT_URL=http://client:3100
+      - API_URL=https://api.test.schul-cloud.org
+      # FEATURE TOGGLES
+      - FEATURE_TEAMS_ENABLED=true
+      # Theme and Titles
+      - SC_THEME=default
+    ports:
+      - \"3200:4000\"
+    restart: unless-stopped
+    command: npm run start
+
   # Selenium Server
   selenium-hub:
     image: selenium/hub:3.141.59-titanium
