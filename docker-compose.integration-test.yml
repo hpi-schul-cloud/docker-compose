@@ -104,7 +104,7 @@ services:
       - NODE_ENV=production
       - TZ=Europe/Berlin
       - LEGACY_CLIENT_URL=http://client:3100
-      - API_URL=https://api.test.schul-cloud.org
+      - API_URL=http://localhost:3030
       # FEATURE TOGGLES
       - FEATURE_TEAMS_ENABLED=true
       # Theme and Titles
