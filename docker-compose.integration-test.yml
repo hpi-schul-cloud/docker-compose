@@ -113,7 +113,7 @@ services:
     ports:
       - "3200:4000"
     restart: unless-stopped
-    command: npm run start
+    command: bash ./startup.sh
 
   # Selenium Server
   selenium-hub:
