@@ -130,17 +130,15 @@ services:
     environment:
       - HUB_HOST=selenium-hub
       - HUB_PORT=4444
-      # BRUTE FORCE PROTECTION
-      - LOGIN_BLOCK_TIME=3
-  firefox:
-    image: selenium/node-firefox:3.141.59-titanium
-    volumes:
-      - /dev/shm:/dev/shm
-    depends_on:
-      - selenium-hub
-    environment:
-      - HUB_HOST=selenium-hub
-      - HUB_PORT=4444
+#   firefox:
+#     image: selenium/node-firefox:3.141.59-titanium
+#     volumes:
+#       - /dev/shm:/dev/shm
+#     depends_on:
+#       - selenium-hub
+#     environment:
+#       - HUB_HOST=selenium-hub
+#       - HUB_PORT=4444
 
 volumes:
   data-server-mongodb:
