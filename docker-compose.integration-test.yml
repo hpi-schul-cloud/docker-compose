@@ -95,7 +95,7 @@ services:
   nuxtclient:
     build:
       context: ../nuxt-client
-      dockerfile: deploy/Dockerfile.client-test
+      dockerfile: deploy/Dockerfile.client
     depends_on:
       - server
       - client
@@ -113,7 +113,6 @@ services:
     ports:
       - "4000:4000"
     restart: unless-stopped
-    command: npm run start
 
   # Selenium Server
   selenium-hub:
