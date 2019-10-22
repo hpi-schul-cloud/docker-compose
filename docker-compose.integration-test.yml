@@ -111,7 +111,7 @@ services:
       # Theme and Titles
       - SC_THEME=default
     ports:
-      - "3200:4000"
+      - "4000:4000"
     restart: unless-stopped
     command: npm run start
 
