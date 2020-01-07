@@ -19,13 +19,15 @@ services:
       - server-mongodb
     environment:
       # ENV
-      - NODE_ENV=default
+      - NODE_ENV=production
       - HOST=http://localhost:3030
       - SC_TITLE=HPI Schulcloud
       - SC_SHORT_TITLE=Schulcloud
       # SMTP
-      - SMTP=smtps://nodejs.smtp@gmail.com:trolololol987!..@smtp.gmail.com
-      - SMTP_SENDER=nodejs.smtp@gmail.com
+      - SMTP_HOST=mailslurper
+      - SMTP_PORT=2500
+      - SMTP_SENDER="noreply@mailslurper.docker"
+      - FORCE_SEND_EMAIL=true
       # Storage
       - AWS_ENDPOINT_URL=https://dev-storage.schul-cloud.org:9001
       #- AWS_ENDPOINT_URL=http://localhost:9000
@@ -138,6 +140,15 @@ services:
 #     environment:
 #       - HUB_HOST=selenium-hub
 #       - HUB_PORT=4444
+
+  mailslurper:
+    image: derekahn/mailslurper
+    volumes: 
+      - ../integration-tests/scripts/ci/mailslurper-config.json:/opt/mailslurper/config.json
+    ports: 
+      - 2500:2500
+      - 8080:8080
+      - 8085:8085
 
 volumes:
   data-server-mongodb:
