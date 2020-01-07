@@ -1,0 +1,128 @@
+version: "3"
+
+
+##############################################################################
+# THIS FILE SHOULD GET DELETED WHEN THE FOLLOWING PRs ARE MERGED
+# https://github.com/schul-cloud/nuxt-client/pull/314
+# https://github.com/schul-cloud/schulcloud-client/pull/1457
+# https://github.com/schul-cloud/integration-tests/pull/31
+##############################################################################
+services:
+  ### Schul-Cloud Server
+  ###
+  server-mongodb:
+    image: mongo:4.0
+    ports:
+      - "27017:27017"
+    volumes:
+      - data-server-mongodb:/data/db
+    restart: unless-stopped
+
+  server:
+    build:
+      context: ../schulcloud-server
+      dockerfile: Dockerfile
+    depends_on:
+      - server-mongodb
+    environment:
+      # ENV
+      - NODE_ENV=default
+      - HOST=http://localhost:3030
+      - SC_TITLE=HPI Schulcloud
+      - SC_SHORT_TITLE=Schulcloud
+      # SMTP
+      - SMTP=smtps://nodejs.smtp@gmail.com:trolololol987!..@smtp.gmail.com
+      - SMTP_SENDER=nodejs.smtp@gmail.com
+      # Storage
+      - AWS_ENDPOINT_URL=https://dev-storage.schul-cloud.org:9001
+      #- AWS_ENDPOINT_URL=http://localhost:9000
+      ## keys for local s3 storage
+      - AWS_ACCESS_KEY=sc-devteam
+      - AWS_SECRET_ACCESS_KEY=kahsuL3Joxohk8Ohz?oraixe
+      # URIs and Port
+      - MONGO_URI=mongodb://server-mongodb:27017/schulcloud
+      - DB_URL=mongodb://server-mongodb:27017/schulcloud
+      - PORT=3030
+      - CONTENT_URI=https://schul-cloud.org:4040
+      # RocketChat
+      - ROCKET_CHAT_URI=https://chat.schulcloud.local
+      # - ROCKET_CHAT_ADMIN_TOKEN=
+      # - ROCKET_CHAT_ADMIN_TOKEN=
+      # - ROCKET_CHAT_ADMIN_ID=
+      # AUTH Secret
+      - AUTHENTICATION=4QF8s3GdIr0y+cSM7q65qhI2QMqVU5Re/o7y9hRIJf9RbOkRHX91ZhnsiwOB6/bPhVu8KRAh7LAq2KbB0qpfep1xBaIHr+vz0Q0BelbNWFvMwpojG75AObL/SZjpEba2K09+uSlo7THCgt+j52OtefXjEZe8lUdTwbD++2euNVvJOiLWUL2WBdb+OrQF7hqUJq9J/YSg8Zpop/5keGi5Dz9KJjG/fXyoX58q+E2sOBDaLzB3CMCzAPEm7jimxi9ONPw7QEPqiHgLA3f0xNRuOXwcGrYt9vAWvVEcIQbVqQ4Q2zcu8HRmo5MRgZwbK4gmhiyzUdc95IBnvPF/YfdDX2e4S6vtjoWPbzIBUEYR+s972yCQ0QHgQXraS8EyST13mhg7SVBVGG0yfWLP5yPg+x5gkj/0EgR868mpKWWEYfcM/paPnLStzGJcEKFCcof8t2uIbeyWPjQM4cHbOCDe/cD2eQXREhlOxOxfj5ghK1WofkPJAzt0Bc+d7kJtWx9Fn1EgE5xEijTZt7FgmPEU8Xlq/gbY5tx3q3NImuoeorqGhsYdcIUShynXR9cMMsz5DLDjMSSgObG6NnQ9CGVidmof+hO1imaFXPu5KMD+02RQdzVMWGClrq1HEJMQF3BiAl/b/wPv5WkbjHWhWApLdmqvRCfPDrEDCN9ocZcUjLQ=
+      - IGNORE_DISCOVERABILITY=true
+      # BRUTE FORCE PROTECTION
+      - LOGIN_BLOCK_TIME=3
+    ports:
+      - "3030:3030"
+      - "5959:5959"
+    restart: unless-stopped
+    command: npm run start
+  ###
+
+  ### Schul-Cloud Client
+  ###
+  client:
+    build:
+      context: ../schulcloud-client
+      dockerfile: Dockerfile
+    depends_on:
+      - server
+    environment:
+      # ENV
+      - NODE_ENV=development
+      - DOCKER=true
+      - CALENDAR_SERVICE_ENABLED=true
+      #- TZ=Europe/Berlin
+      # Theme and Titles
+      - SC_TITLE=HPI Schulcloud
+      - SC_SHORT_TITLE=Schulcloud
+      - SC_PRODUCTNAME=Hauptschule
+      - SC_FEDERALSTATE=mainstate
+      # Google
+      #- GOOGLE_ANALYTICS_TRACKING_ID="UA-155982548-1"
+      # URIs
+      - HOST=http://localhost:3100
+      - BACKEND_URL=http://server:3030
+      - PUBLIC_BACKEND_URL=https://localhost:3030
+        # - LIBRE_OFFICE_CLIENT_URL=http://localhost:9980
+        # - ROCKET_CHAT_URI=https://chat.schulcloud.local
+      # FEATURE TOGGLES
+        # - FEATURE_TEAMS_ENABLED=true
+        # - ROCKETCHAT_SERVICE_ENABLED=true
+        # - EDTR_SOURCE=https://cdn.jsdelivr.net/gh/schul-cloud/edtrio@e9d3bb9d66092bafa07846269c8fc6f9d5fb0559/dist/index.js
+      # BRUTE FORCE PROTECTION
+      - LOGIN_BLOCK_TIME=3
+    ports:
+      - "3100:3100"
+    restart: unless-stopped
+    command: npm run start
+
+  # Selenium Server
+  selenium-hub:
+    image: selenium/hub:3.141.59-titanium
+    container_name: selenium-hub
+    ports:
+      - "4444:4444"
+  chrome:
+    image: selenium/node-chrome:3.141.59-titanium
+    volumes:
+      - /dev/shm:/dev/shm
+    depends_on:
+      - selenium-hub
+    environment:
+      - HUB_HOST=selenium-hub
+      - HUB_PORT=4444
+#   firefox:
+#     image: selenium/node-firefox:3.141.59-titanium
+#     volumes:
+#       - /dev/shm:/dev/shm
+#     depends_on:
+#       - selenium-hub
+#     environment:
+#       - HUB_HOST=selenium-hub
+#       - HUB_PORT=4444
+
+volumes:
+  data-server-mongodb:
