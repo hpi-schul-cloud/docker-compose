@@ -28,6 +28,9 @@ services:
       - SMTP_PORT=2500
       - SMTP_SENDER="noreply@mailslurper.docker"
       - FORCE_SEND_EMAIL=true
+      # Notifications service
+      - NOTIFICATION_PLATFORM=testplatform
+      - NOTIFICATION_URI=http://notification-service:3031
       # Storage
       - AWS_ENDPOINT_URL=https://dev-storage.schul-cloud.org:9001
       #- AWS_ENDPOINT_URL=http://localhost:9000
@@ -141,11 +144,33 @@ services:
 #       - HUB_HOST=selenium-hub
 #       - HUB_PORT=4444
 
+  notification-service:
+    build:
+      context: ../node-notification-service
+      dockerfile: Dockerfile
+    container_name: notification-service
+    volumes:
+      - ../node-notification-service/platforms:/usr/src/app/platforms
+    ports:
+      - 3031:3031
+    links:
+      - mongodb
+      - redis-noti
+    environment:
+      - MONGO_HOST=mongodb
+      - REDIS_HOST=redis
+    volumes:
+      - ./logs:/usr/src/app/logs
+    depends_on:
+      - mongodb
+      - redis
+    command: npm run debug
+
   mailslurper:
     image: derekahn/mailslurper
-    volumes: 
+    volumes:
       - ../integration-tests/scripts/ci/mailslurper-config.json:/opt/mailslurper/config.json
-    ports: 
+    ports:
       - 2500:2500
       - 8080:8080
       - 8085:8085
