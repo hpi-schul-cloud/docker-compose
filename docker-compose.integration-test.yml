@@ -144,24 +144,29 @@ services:
 #       - HUB_HOST=selenium-hub
 #       - HUB_PORT=4444
 
-  # notification-service:
-  #   build:
-  #     context: ../node-notification-service
-  #     dockerfile: Dockerfile
-  #   container_name: notification-service
-  #   volumes:
-  #     - ../node-notification-service/platforms:/usr/src/app/platforms
-  #   ports:
-  #     - 3031:3031
-  #   environment:
-  #     - MONGO_HOST=mongodb
-  #     - REDIS_HOST=redis
-  #   volumes:
-  #     - ./logs:/usr/src/app/logs
-  #   depends_on:
-  #     - mongodb
-  #     - redis
-  #   command: npm run debug
+  # Notification Service
+
+  notification-service:
+    build:
+      context: ../node-notification-service
+      dockerfile: Dockerfile
+    container_name: notification-service
+    volumes:
+      - ../node-notification-service/platforms:/usr/src/app/platforms
+    ports:
+      - 3031:3031
+    environment:
+      - MONGO_HOST=server-mongodb
+      - REDIS_HOST=redis
+    volumes:
+      - ./logs:/usr/src/app/logs
+    depends_on:
+      - server-mongodb
+      - redis
+    command: npm run debug
+
+  redis:
+    image: redis:5.0.3
 
   mailslurper:
     image: derekahn/mailslurper
