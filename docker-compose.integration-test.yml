@@ -152,7 +152,7 @@ services:
       dockerfile: Dockerfile
     container_name: notification-service
     volumes:
-      - ../node-notification-service/platforms:/usr/src/app/platforms
+      - ../integration-tests/ci/config/notification-service/testplatform.config.json:/usr/src/app/platforms/testplatform
     ports:
       - 3031:3031
     environment:
@@ -163,7 +163,7 @@ services:
     depends_on:
       - server-mongodb
       - redis
-    command: npm run debug
+    command: sh -c "npm run build & npm run start"
 
   redis:
     image: redis:5.0.3
