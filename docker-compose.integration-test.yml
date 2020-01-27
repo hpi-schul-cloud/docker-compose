@@ -160,7 +160,7 @@ services:
       - REDIS_HOST=redis
     volumes:
       - ./logs:/usr/src/app/logs
-    depends_on:''
+    depends_on:
       - server-mongodb
       - redis
     command: npm run debug
