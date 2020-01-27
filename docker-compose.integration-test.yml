@@ -160,7 +160,7 @@ services:
       - REDIS_HOST=redis
     volumes:
       - ./logs:/usr/src/app/logs
-    depends_on:
+    depends_on:''
       - server-mongodb
       - redis
     command: npm run debug
@@ -168,14 +168,11 @@ services:
   redis:
     image: redis:5.0.3
 
-  mailslurper:
-    image: derekahn/mailslurper
-    volumes:
-      - ../integration-tests/scripts/ci/mailslurper-config.json:/opt/mailslurper/config.json
+  mail:
+    image: schickling/mailcatcher
     ports:
-      - 2500:2500
-      - 8080:8080
-      - 8085:8085
+      - 1080:1080
+# NOTE TO SELF: check smtp :26
 
 volumes:
   data-server-mongodb:
