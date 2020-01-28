@@ -24,9 +24,6 @@ services:
       - SC_TITLE=HPI Schulcloud
       - SC_SHORT_TITLE=Schulcloud
       # SMTP
-      - SMTP_HOST=mailslurper
-      - SMTP_PORT=2500
-      - SMTP_SENDER="noreply@mailslurper.docker"
       - FORCE_SEND_EMAIL=true
       # Notifications service
       - NOTIFICATION_PLATFORM=testplatform
@@ -163,6 +160,7 @@ services:
     depends_on:
       - server-mongodb
       - redis
+      - mail
     command: npm run debug
 
   redis:
@@ -172,7 +170,6 @@ services:
     image: schickling/mailcatcher
     ports:
       - 1080:1080
-# NOTE TO SELF: check smtp :26
 
 volumes:
   data-server-mongodb:
