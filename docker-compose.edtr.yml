@@ -1,0 +1,100 @@
+version: "3"
+
+services:
+
+
+
+  ### kong api gateway
+  kong-database:
+    restart: on-failure
+    image: cassandra:3
+    container_name: kong-database
+    ports:
+      - "9042:9042"
+    volumes:
+      - "data-kong-cassandra:/var/lib/cassandra"
+
+  kong:
+    restart: on-failure
+    image: kong
+    container_name: kong
+    depends_on:
+      - kong-database
+      - kong-migration
+    ports:
+      - "80:8000"
+      - "443:8443"
+      - "8001:8001"
+      - "7946:7946"
+      - "7946:7946/udp"
+    environment:
+      - KONG_DATABASE=cassandra
+      - KONG_ADMIN_LISTEN=0.0.0.0:8001, 0.0.0.0:8444 ssl
+      - KONG_CASSANDRA_CONTACT_POINTS=kong-database
+      - DB_UPDATE_PROPAGATION=5
+
+  kong-migration:
+    restart: on-failure
+    image: kong:latest
+    container_name: kong-migration
+    depends_on:
+     - kong-database
+    environment:
+     - KONG_DATABASE=cassandra
+     - KONG_CASSANDRA_CONTACT_POINTS=kong-database
+     - DB_UPDATE_PROPAGATION=5
+    command: kong migrations bootstrap
+
+
+  #### Editor
+  ###
+  edtr:
+    build:
+      context: ../edtrio
+      dockerfile: Dockerfile.develop
+    container_name: edtr
+    volumes:
+      - ../edtrio:/home/node/app
+    environment:
+     - EDITOR_API_URL=http://api.edtr.l
+     - SERVER_API_URL=api.schul-cloud.l
+     - EDITOR_SOCKET_URL=ws://api.edtr.l
+    ports:
+      - 1234:1234
+      - 1235:1235
+    restart: unless-stopped
+    command: npm run dev
+
+
+  edtr-server:
+    build:
+      context: ../schulcloud-editor
+      dockerfile: Dockerfile.develop
+    container_name: edtr-server
+    depends_on:
+      - mongodb
+    volumes:
+      - ../schulcloud-editor:/usr/src/app
+    environment:
+      - DB_URL=mongodb://mongodb:27017/edtr
+    ports:
+      - 4001:4001
+      - 4002:4002
+    restart: unless-stopped
+
+
+### database
+
+  mongodb:
+    image: mongo:4.0
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - data-mongodb:/data/db
+    restart: unless-stopped
+
+
+volumes:
+  data-mongodb:
+  data-kong-cassandra:

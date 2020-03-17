@@ -19,13 +19,15 @@ services:
       - server-mongodb
     environment:
       # ENV
-      - NODE_ENV=default
+      - NODE_ENV=production
       - HOST=http://localhost:3030
       - SC_TITLE=HPI Schulcloud
       - SC_SHORT_TITLE=Schulcloud
       # SMTP
-      - SMTP=smtps://nodejs.smtp@gmail.com:trolololol987!..@smtp.gmail.com
-      - SMTP_SENDER=nodejs.smtp@gmail.com
+      - FORCE_SEND_EMAIL=true
+      # Notifications service
+      - NOTIFICATION_PLATFORM=testplatform
+      - NOTIFICATION_URI=http://notification-service:3031
       # Storage
       - AWS_ENDPOINT_URL=https://dev-storage.schul-cloud.org:9001
       #- AWS_ENDPOINT_URL=http://localhost:9000
@@ -138,6 +140,38 @@ services:
 #     environment:
 #       - HUB_HOST=selenium-hub
 #       - HUB_PORT=4444
+
+  # Notification Service
+
+  notification-service:
+    build:
+      context: ../node-notification-service
+      dockerfile: Dockerfile
+    container_name: notification-service
+    volumes:
+      - ../integration-tests/ci/config/notification-service/testplatform.config.json:/usr/src/app/platforms/testplatform
+    ports:
+      - 3031:3031
+    environment:
+      - MONGO_HOST=server-mongodb
+      - REDIS_HOST=redis
+    volumes:
+      - ./logs:/usr/src/app/logs
+    depends_on:
+      - server-mongodb
+      - redis
+      - mail
+    command: sh -c "npm run build & npm run start"
+      
+
+
+  redis:
+    image: redis:5.0.3
+
+  mail:
+    image: schickling/mailcatcher
+    ports:
+      - 1080:1080
 
 volumes:
   data-server-mongodb:
