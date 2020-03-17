@@ -43,7 +43,7 @@ services:
       - MONGO_URI=mongodb://server-mongodb:27017/schulcloud
       - DB_URL=mongodb://server-mongodb:27017/schulcloud
       - PORT=3030
-      - CONTENT_URI=https://schul-cloud.org
+      - CONTENT_URI=https://content.schul-cloud.org
       # RocketChat
       - ROCKET_CHAT_URI=https://chat.schulcloud.local
       # - ROCKET_CHAT_ADMIN_TOKEN=
