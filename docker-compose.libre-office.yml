@@ -1,0 +1,17 @@
+version: "3"
+
+services:
+
+### Libre Office
+  ###
+  libreoffice:
+    image: schulcloud/libreoffice:latest
+    ports:
+      - "9980:9980"
+    volumes:
+      - ./loolwsd.xml:/etc/loolwsd/loolwsd.xml
+    environment:
+      domain: localhost:9980
+      server_name: server:3030
+      extra_params: --o:ssl.enable=false
+    restart: unless-stopped

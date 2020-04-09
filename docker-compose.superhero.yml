@@ -1,0 +1,17 @@
+version: "3"
+
+services:
+
+  ### Schul-Cloud Superhero Dashboard
+  ###
+  superhero-dashboard:
+    image: schulcloud/superhero-dashboard
+    environment:
+      BACKEND_URL: http://server:3030/
+      SC_NAV_TITLE: Niedersächsische Bildungscloud
+      HOST: http://localhost:3033
+    depends_on:
+      - server
+    ports:
+      - 3033:3033
+    restart: unless-stopped
