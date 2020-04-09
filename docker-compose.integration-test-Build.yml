@@ -26,7 +26,7 @@ services:
       - server-mongodb
     environment:
       # ENV
-      - NODE_ENV=default
+      - NODE_ENV=production
       - HOST=http://localhost:3030
       - SC_TITLE=HPI Schulcloud
       - SC_SHORT_TITLE=Schulcloud
