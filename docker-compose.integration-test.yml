@@ -114,10 +114,9 @@ services:
       - API_URL=http://server:3030
       # FEATURE TOGGLES
       - FEATURE_TEAMS_ENABLED=true
-      # Theme and Titles
-      - SC_THEME=default
-      # FEATURE TOGGLES
       - LERNSTORE_MODE=LEGACY
+      # Theme and Titles
+      - SC_THEME=default    
     ports:
       - "4000:4000"
     restart: unless-stopped
