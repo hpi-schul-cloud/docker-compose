@@ -123,7 +123,7 @@ services:
     ports:
       - "4444:4444"
   chrome:
-    image: selenium/node-chrome:84.0
+    image: selenium/node-chrome:3.141.59-titanium
     volumes:
       - /dev/shm:/dev/shm
     depends_on:
