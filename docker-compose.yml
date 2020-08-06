@@ -71,6 +71,8 @@ services:
       - ENABLE_THUMBNAIL_GENERATION=true
       - FILE_PREVIEW_SERVICE_URI=http://filepreview:3000/filepreview
       - FILE_PREVIEW_CALLBACK_URI=http://server:3030/fileStorage/thumbnail/
+      # FEATURE TOGGLES
+      - LERNSTORE_MODE=LEGACY
     ports:
       - "3030:3030"
       - "5959:5959"
@@ -114,6 +116,7 @@ services:
       - ROCKET_CHAT_URI=https://chat.schulcloud.local
       # FEATURE TOGGLES
       - FEATURE_TEAMS_ENABLED=true
+      - LERNSTORE_MODE=LEGACY
       - ROCKETCHAT_SERVICE_ENABLED=true
       - EDTR_SOURCE=https://cdn.jsdelivr.net/gh/schul-cloud/edtrio@e9d3bb9d66092bafa07846269c8fc6f9d5fb0559/dist/index.js
     ports:

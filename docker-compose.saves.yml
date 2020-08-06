@@ -17,6 +17,7 @@ nuxt-client:
       # FEATURE TOGGLES
       - FEATURE_TEAMS_ENABLED=true
       - CALENDAR_SERVICE_ENABLED=true
+      - LERNSTORE_MODE=LEGACY
       # Theme and Titles
       - SC_THEME=default
       - SC_TITLE=HPI Schul-Cloud
