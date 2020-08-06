@@ -116,7 +116,7 @@ services:
       - FEATURE_TEAMS_ENABLED=true
       - LERNSTORE_MODE=LEGACY
       # Theme and Titles
-      - SC_THEME=default    
+      - SC_THEME=default
     ports:
       - "4000:4000"
     restart: unless-stopped
