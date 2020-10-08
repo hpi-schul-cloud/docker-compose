@@ -51,14 +51,14 @@ services:
       - LOGIN_BLOCK_TIME=3
       # FEATURE TOGGLES
       - LERNSTORE_MODE=EDUSHARING
-      - ES_DOMAIN=
-      - ES_USER=
-      - ES_PASSWORD=
-      - ES_GRANT_TYPE=
-      - ES_OAUTH_SECRET=
-      - ES_CLIENT_ID=
-      - ES_MERLIN_USERNAME=
-      - ES_MERLIN_PW=
+      - ES_DOMAIN=https://mv-repo.schul-cloud.org
+      - ES_USER
+      - ES_PASSWORD
+      - ES_GRANT_TYPE=password
+      - ES_OAUTH_SECRET
+      - ES_CLIENT_ID=eduApp
+      - ES_MERLIN_USERNAME
+      - ES_MERLIN_PW
     ports:
       - "3030:3030"
       - "5959:5959"
