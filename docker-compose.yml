@@ -20,23 +20,26 @@ services:
   
   ### Schul-Cloud Server
   ###
-  server-mongodb:
+  mongodb:
     image: mongo:4.2
+    container_name: mongodb
     ports:
       - "27017:27017"
     volumes:
-      - data-server-mongodb:/data/db
+      - data-mongodb:/data/db
     restart: unless-stopped
 
   server:
     #image: schulcloud/schulcloud-server:latest
+    container_name: schulcloud-server
     build:
       context: ../schulcloud-server
       dockerfile: Dockerfile
     volumes:
       - ../schulcloud-server:/schulcloud-server
     depends_on:
-      - server-mongodb
+      - mongodb
+      - notification-service
     environment:
       # ENV
       - NODE_ENV=production
@@ -53,8 +56,8 @@ services:
       # - AWS_ACCESS_KEY=
       # - AWS_SECRET_ACCESS_KEY=
       # URIs and Port
-      - MONGO_URI=mongodb://server-mongodb:27017/schulcloud
-      - DB_URL=mongodb://server-mongodb:27017/schulcloud
+      - MONGO_URI=mongodb://mongodb:27017/schulcloud
+      - DB_URL=mongodb://mongodb:27017/schulcloud
       - CALENDAR_URI=http://calendar:3000
       - CONTENT_URI=https://consent.schul-cloud.org
       - NOTIFICATION_URI=http://notification:3030
@@ -177,9 +180,39 @@ services:
   ### Schul-Cloud Notifications
   ###
 
-  ###
+  notification-service:
+    #image: friedow/node-notification-service:latest
+    build:
+      context: ../node-notification-service
+      dockerfile: Dockerfile
+    container_name: notification-service
+    volumes:
+      - ../node-notification-service:/usr/src/app
+    ports:
+      - 3031:3031
+    links:
+      - mongodb
+      - redis-noti
+    environment:
+      - MONGO_HOST=mongodb
+      - REDIS_HOST=redis-noti
+      #- NOTIFICATION_PORT=3031
+      # - NODE_ENV=production
+    depends_on:
+      - mongodb
+      - redis-noti
+      - mail
+    command: sh -c "npm run build && npm run debug"
 
-  
+  redis-noti:
+    image: redis:5.0.3
+    restart: always
+
+  mail:
+    image: schickling/mailcatcher
+    ports:
+      - 1080:1080
+
   ### Schul-Cloud Content
   ###
   
@@ -227,7 +260,7 @@ networks:
 
 
 volumes:
-  data-server-mongodb:
+  data-mongodb:
   data-calendar-postgres:
   data-s3-storage:
   db-data:
