@@ -42,7 +42,7 @@ services:
       - notification-service
     environment:
       # ENV
-      - NODE_ENV=production
+      - NODE_ENV=development
       - HOST=http://localhost:3030
       - SC_TITLE=HPI Schulcloud
       - SC_SHORT_TITLE=Schulcloud
@@ -76,6 +76,7 @@ services:
       - FILE_PREVIEW_CALLBACK_URI=http://server:3030/fileStorage/thumbnail/
       # FEATURE TOGGLES
       - LERNSTORE_MODE=LEGACY
+      - FORCE_SEND_EMAIL=true
     ports:
       - "3030:3030"
       - "5959:5959"
