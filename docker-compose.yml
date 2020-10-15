@@ -40,6 +40,7 @@ services:
     depends_on:
       - mongodb
       - notification-service
+      - redis
     environment:
       # ENV
       - NODE_ENV=development
@@ -58,9 +59,10 @@ services:
       # URIs and Port
       - MONGO_URI=mongodb://mongodb:27017/schulcloud
       - DB_URL=mongodb://mongodb:27017/schulcloud
+      - REDIS_URI=redis://redis:6379
       - CALENDAR_URI=http://calendar:3000
       - CONTENT_URI=https://consent.schul-cloud.org
-      - NOTIFICATION_URI=http://notification:3030
+      - NOTIFICATION_URI=http://notification:3031
       - PORT=3030
       # RocketChat
       - ROCKET_CHAT_URI=https://chat.schulcloud.local
@@ -193,21 +195,17 @@ services:
       - 3031:3031
     links:
       - mongodb
-      - redis-noti
+      - redis
     environment:
       - MONGO_HOST=mongodb
-      - REDIS_HOST=redis-noti
+      - REDIS_HOST=redis
       #- NOTIFICATION_PORT=3031
       # - NODE_ENV=production
     depends_on:
       - mongodb
-      - redis-noti
+      - redis
       - mail
     command: sh -c "npm run build && npm run debug"
-
-  redis-noti:
-    image: redis:5.0.3
-    restart: always
 
   mail:
     image: schickling/mailcatcher
