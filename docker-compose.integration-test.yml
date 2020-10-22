@@ -17,6 +17,7 @@ services:
       dockerfile: Dockerfile
     depends_on:
       - server-mongodb
+      - redis
     environment:
       # ENV
       - NODE_ENV=production
@@ -37,6 +38,7 @@ services:
       # URIs and Port
       - MONGO_URI=mongodb://server-mongodb:27017/schulcloud
       - DB_URL=mongodb://server-mongodb:27017/schulcloud
+      - REDIS_URI=redis://redis:6379
       - PORT=3030
       - CONTENT_URI=https://content.schul-cloud.org
       # RocketChat
@@ -153,21 +155,19 @@ services:
       context: ../node-notification-service
       dockerfile: Dockerfile
     container_name: notification-service
-    volumes:
-      - ../integration-tests/ci/config/notification-service/testplatform.config.json:/usr/src/app/platforms/testplatform
     ports:
       - 3031:3031
     environment:
       - MONGO_HOST=server-mongodb
       - REDIS_HOST=redis
     volumes:
+      - ../integration-tests/ci/config/notification-service/testplatform.config.json:/usr/src/app/platforms/testplatform
       - ./logs:/usr/src/app/logs
     depends_on:
       - server-mongodb
       - redis
       - mail
     command: sh -c "npm run build & npm run start"
-      
 
 
   redis:
