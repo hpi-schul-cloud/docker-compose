@@ -57,8 +57,8 @@ services:
       - ES_DOMAIN=https://mv-repo.schul-cloud.org
       - ES_USER
       - ES_PASSWORD
-      - ES_MERLIN_USERNAME
-      - ES_MERLIN_PW
+      - SECRET_ES_MERLIN_USERNAME
+      - SECRET_ES_MERLIN_PW
     ports:
       - "3030:3030"
       - "5959:5959"
