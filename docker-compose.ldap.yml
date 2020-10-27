@@ -30,7 +30,7 @@ services:
     tty: true
     stdin_open: true
     volumes:
-      #- ./data/ldif/small3.ldif:/container/service/slapd/assets/config/bootstrap/ldif/50-bootstrap.ldif
+      - ./data/ldif/large2.ldif:/container/service/slapd/assets/config/bootstrap/ldif/custom/custom.ldif
       - /var/lib/ldap
       - /etc/ldap/slapd.d
       - /container/service/slapd/assets/certs/
@@ -42,7 +42,7 @@ services:
     # fully-qualified domain name for the host.
     domainname: "example.org"
     hostname: "ldap-server"
-    command: --copy-service
+    command: --copy-service --loglevel info
 
   ###################
   ### admin interface
