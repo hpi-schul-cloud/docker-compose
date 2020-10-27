@@ -1,0 +1,5 @@
+dn: ou=Payroll,dc=example,dc=org
+changetype: add
+ou: Payroll
+objectClass: top
+objectClass: organizationalUnit
