@@ -38,6 +38,7 @@ services:
       # URIs and Port
       - MONGO_URI=mongodb://server-mongodb:27017/schulcloud
       - DB_URL=mongodb://server-mongodb:27017/schulcloud
+      - DATABASE__URL=mongodb://server-mongodb:27017/schulcloud
       - REDIS_URI=redis://redis:6379
       - PORT=3030
       - CONTENT_URI=https://content.schul-cloud.org
