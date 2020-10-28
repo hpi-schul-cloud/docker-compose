@@ -15,12 +15,12 @@ services:
   ### ldap
   ldap:
     image: osixia/openldap:stable
-    container_name: "ldap"
+    container_name: ldap
     environment:
-      #LDAP_LOG_LEVEL: "debug"
-      #LDAP_ORGANISATION: "Schul-Cloud"
-      #LDAP_DOMAIN: "example.org"
-      #LDAP_BASE_DN: "dc=de,dc=example,dc=org"
+      #LDAP_LOG_LEVEL: "256"
+      #LDAP_ORGANISATION: "Schulcloud"
+      #LDAP_DOMAIN: "localhost"
+      #LDAP_BASE_DN: ""
       LDAP_ADMIN_PASSWORD: "admin"
       #LDAP_CONFIG_PASSWORD: "config"
       #LDAP_READONLY_USER: "false"
@@ -39,7 +39,8 @@ services:
     tty: true
     stdin_open: true
     volumes:
-      - ../data/ldif/large2.ldif:/container/service/slapd/assets/config/bootstrap/ldif/custom/custom.ldif
+      - ../data/ldif:/container/service/slapd/assets/config/bootstrap/ldif/custom/
+      - ../data/schema:/container/service/slapd/assets/config/bootstrap/schema/custom/
       - /var/lib/ldap
       - /etc/ldap/slapd.d
       - /container/service/slapd/assets/certs/
@@ -51,7 +52,7 @@ services:
     # fully-qualified domain name for the host.
     domainname: "example.org"
     hostname: "ldap-server"
-    command: --copy-service
+    command: --copy-service --loglevel info
 
   ###################
   ### admin interface
