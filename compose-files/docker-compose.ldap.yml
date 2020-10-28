@@ -7,17 +7,20 @@ services:
       - ldap
     depends_on:
       - ldap
+    environment:
+      - LDAP_PASSWORD_ENCRYPTION_KEY=iamasecretmonkeyhelpingencrypt
+      - SYNC_API_KEY=Schulcloud1!Schulcloud1!
 
   ###################
   ### ldap
   ldap:
     image: osixia/openldap:stable
-    container_name: openldap
+    container_name: "ldap"
     environment:
       #LDAP_LOG_LEVEL: "debug"
       #LDAP_ORGANISATION: "Schul-Cloud"
-      LDAP_DOMAIN: "example.org"
-      LDAP_BASE_DN: "dc=de,dc=example,dc=org"
+      #LDAP_DOMAIN: "example.org"
+      #LDAP_BASE_DN: "dc=de,dc=example,dc=org"
       LDAP_ADMIN_PASSWORD: "admin"
       #LDAP_CONFIG_PASSWORD: "config"
       #LDAP_READONLY_USER: "false"
@@ -36,7 +39,7 @@ services:
     tty: true
     stdin_open: true
     volumes:
-      - ./data/ldif/large2.ldif:/container/service/slapd/assets/config/bootstrap/ldif/custom/custom.ldif
+      - ../data/ldif/large2.ldif:/container/service/slapd/assets/config/bootstrap/ldif/custom/custom.ldif
       - /var/lib/ldap
       - /etc/ldap/slapd.d
       - /container/service/slapd/assets/certs/

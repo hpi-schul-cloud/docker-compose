@@ -1,0 +1,13 @@
+version: "3"
+
+services:
+
+  server:
+    environment:
+      - LOG_LEVEL=debug
+    command: npm run debug:container
+
+  client:
+    environment:
+      - LOG_LEVEL=debug
+    command: bash -c "gulp & gulp watch-reload"
