@@ -43,7 +43,7 @@ services:
       - redis
     environment:
       # ENV
-      - NODE_ENV=development
+      - NODE_ENV=production
       - HOST=http://localhost:3030
       - SC_TITLE=HPI Schulcloud
       - SC_SHORT_TITLE=Schulcloud
@@ -62,12 +62,12 @@ services:
       - REDIS_URI=redis://redis:6379
       - CALENDAR_URI=http://calendar:3000
       - CONTENT_URI=https://consent.schul-cloud.org
-      - NOTIFICATION_URI=http://notification:3031
+      - NOTIFICATION_URI=http://notification-service:3031
       - PORT=3030
       # RocketChat
       - ROCKET_CHAT_URI=https://chat.schulcloud.local
 #      - ROCKET_CHAT_ADMIN_TOKEN=
-    #  - ROCKET_CHAT_ADMIN_TOKEN= 
+    #  - ROCKET_CHAT_ADMIN_TOKEN=
     #  - ROCKET_CHAT_ADMIN_ID=
       # AUTH Secret
       # - AUTHENTICATION=

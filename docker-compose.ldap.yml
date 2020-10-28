@@ -1,17 +1,23 @@
 version: "3"
 
 services:
+
+  server:
+    links:
+      - ldap
+    depends_on:
+      - ldap
+
   ###################
   ### ldap
-
   ldap:
     image: osixia/openldap:stable
     container_name: openldap
     environment:
-      #LDAP_LOG_LEVEL: "256"
-      #LDAP_ORGANISATION: "Schulcloud"
-      #LDAP_DOMAIN: "localhost"
-      #LDAP_BASE_DN: ""
+      #LDAP_LOG_LEVEL: "debug"
+      #LDAP_ORGANISATION: "Schul-Cloud"
+      LDAP_DOMAIN: "example.org"
+      LDAP_BASE_DN: "dc=de,dc=example,dc=org"
       LDAP_ADMIN_PASSWORD: "admin"
       #LDAP_CONFIG_PASSWORD: "config"
       #LDAP_READONLY_USER: "false"
@@ -42,7 +48,7 @@ services:
     # fully-qualified domain name for the host.
     domainname: "example.org"
     hostname: "ldap-server"
-    command: --copy-service --loglevel info
+    command: --copy-service
 
   ###################
   ### admin interface
