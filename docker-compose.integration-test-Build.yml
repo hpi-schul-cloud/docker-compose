@@ -5,7 +5,7 @@ version: "3"
 # THIS FILE SHOULD GET DELETED WHEN THE FOLLOWING PRs ARE MERGED
 # https://github.com/schul-cloud/nuxt-client/pull/314
 # https://github.com/schul-cloud/schulcloud-client/pull/1457
-# https://github.com/schul-cloud/integration-tests/pull/31
+# https://github.com/schul-cloud/end-to-end-tests/pull/31
 ##############################################################################
 services:
   ### Schul-Cloud Server
