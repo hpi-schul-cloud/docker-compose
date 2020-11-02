@@ -20,26 +20,30 @@ services:
   
   ### Schul-Cloud Server
   ###
-  server-mongodb:
+  mongodb:
     image: mongo:4.2
+    container_name: mongodb
     ports:
       - "27017:27017"
     volumes:
-      - data-server-mongodb:/data/db
+      - data-mongodb:/data/db
     restart: unless-stopped
 
   server:
     #image: schulcloud/schulcloud-server:latest
+    container_name: schulcloud-server
     build:
       context: ../schulcloud-server
       dockerfile: Dockerfile
     volumes:
       - ../schulcloud-server:/schulcloud-server
     depends_on:
-      - server-mongodb
+      - mongodb
+      - notification-service
+      - redis
     environment:
       # ENV
-      - NODE_ENV=production
+      - NODE_ENV=development
       - HOST=http://localhost:3030
       - SC_TITLE=HPI Schulcloud
       - SC_SHORT_TITLE=Schulcloud
@@ -53,11 +57,13 @@ services:
       # - AWS_ACCESS_KEY=
       # - AWS_SECRET_ACCESS_KEY=
       # URIs and Port
-      - MONGO_URI=mongodb://server-mongodb:27017/schulcloud
-      - DB_URL=mongodb://server-mongodb:27017/schulcloud
+      - MONGO_URI=mongodb://mongodb:27017/schulcloud
+      - DB_URL=mongodb://mongodb:27017/schulcloud
+      - DATABASE__URL=mongodb://server-mongodb:27017/schulcloud
+      - REDIS_URI=redis://redis:6379
       - CALENDAR_URI=http://calendar:3000
       - CONTENT_URI=https://consent.schul-cloud.org
-      - NOTIFICATION_URI=http://notification:3030
+      - NOTIFICATION_URI=http://notification:3031
       - PORT=3030
       # RocketChat
       - ROCKET_CHAT_URI=https://chat.schulcloud.local
@@ -73,6 +79,7 @@ services:
       - FILE_PREVIEW_CALLBACK_URI=http://server:3030/fileStorage/thumbnail/
       # FEATURE TOGGLES
       - LERNSTORE_MODE=LEGACY
+      - FORCE_SEND_EMAIL=true
     ports:
       - "3030:3030"
       - "5959:5959"
@@ -177,9 +184,35 @@ services:
   ### Schul-Cloud Notifications
   ###
 
-  ###
+  notification-service:
+    #image: friedow/node-notification-service:latest
+    build:
+      context: ../node-notification-service
+      dockerfile: Dockerfile
+    container_name: notification-service
+    volumes:
+      - ../node-notification-service:/usr/src/app
+    ports:
+      - 3031:3031
+    links:
+      - mongodb
+      - redis
+    environment:
+      - MONGO_HOST=mongodb
+      - REDIS_HOST=redis
+      #- NOTIFICATION_PORT=3031
+      # - NODE_ENV=production
+    depends_on:
+      - mongodb
+      - redis
+      - mail
+    command: sh -c "npm run build && npm run debug"
 
-  
+  mail:
+    image: schickling/mailcatcher
+    ports:
+      - 1080:1080
+
   ### Schul-Cloud Content
   ###
   
@@ -227,7 +260,7 @@ networks:
 
 
 volumes:
-  data-server-mongodb:
+  data-mongodb:
   data-calendar-postgres:
   data-s3-storage:
   db-data:
