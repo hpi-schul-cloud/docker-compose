@@ -1,0 +1,41 @@
+version: "3"
+
+services:
+
+  server:
+    depends_on:
+      - notification-service
+    environment:
+      - NOTIFICATION_URI=http://notification-service:3031
+
+  ###
+  ### Schul-Cloud Notifications
+  ###
+  notification-service:
+    image: schulcloud/node-notification-service:latest
+    build:
+      context: ../../node-notification-service
+      dockerfile: Dockerfile
+    container_name: notification-service
+    volumes:
+      - ../../node-notification-service:/usr/src/app
+    ports:
+      - 3031:3031
+    links:
+      - mongodb
+      - redis
+    environment:
+      - MONGO_HOST=mongodb
+      - REDIS_HOST=redis
+      #- NOTIFICATION_PORT=3031
+      # - NODE_ENV=production
+    depends_on:
+      - mongodb
+      - redis
+      - mail
+    command: sh -c "npm run build && npm run debug"
+
+  mail:
+    image: schickling/mailcatcher
+    ports:
+      - 1080:1080
