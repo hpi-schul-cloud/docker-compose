@@ -15,13 +15,13 @@ services:
   ### ldap
   ldap:
     image: osixia/openldap:stable
-    container_name: ldap
+    container_name: openldap
     environment:
       #LDAP_LOG_LEVEL: "256"
       #LDAP_ORGANISATION: "Schulcloud"
       #LDAP_DOMAIN: "localhost"
       #LDAP_BASE_DN: ""
-      LDAP_ADMIN_PASSWORD: "admin"
+      LDAP_ADMIN_PASSWORD: "Donky"
       #LDAP_CONFIG_PASSWORD: "config"
       #LDAP_READONLY_USER: "false"
       #LDAP_READONLY_USER_USERNAME: "readonly"

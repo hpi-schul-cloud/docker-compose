@@ -179,7 +179,7 @@ services:
   ###
 
   notification-service:
-    image: friedow/node-notification-service:latest
+    image: schulcloud/node-notification-service:latest
     build:
       context: ../../node-notification-service
       dockerfile: Dockerfile
