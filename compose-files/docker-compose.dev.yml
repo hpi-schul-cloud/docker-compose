@@ -5,9 +5,27 @@ services:
   server:
     environment:
       - LOG_LEVEL=debug
+    volumes:
+      - ${SEVRER_PATH}:/schulcloud-server
     command: npm run debug:container
 
   client:
     environment:
       - LOG_LEVEL=debug
+    volumes:
+      - ${CLIENT_PATH}:/home/node/app
+      - /home/node/app/build
     command: bash -c "gulp & gulp watch-reload"
+
+  nuxt-client:
+    volumes:
+      - ${NUXT_PATH}:/app
+    command: npm run dev:nuxt
+
+  #notification-service:
+  #  volumes:
+  #    - ../../node-notification-service:/usr/src/app
+
+  #filepreview:
+  #  volumes:
+  #    - ${FILE_PREVIEW_PATH:-/dev/null}:/home/node/app

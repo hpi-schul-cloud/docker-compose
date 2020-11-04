@@ -36,13 +36,13 @@ services:
     restart: unless-stopped
 
   server:
-    image: schulcloud/schulcloud-server:latest
+    image: schulcloud/schulcloud-server:${SERVER_DOCKER_TAG}
     container_name: schulcloud-server
     build:
-      context: ../../schulcloud-server
+      context: ${SERVER_PATH:-/dev/null}
       dockerfile: Dockerfile
-    volumes:
-      - ../../schulcloud-server:/schulcloud-server
+      cache_from:
+        - schulcloud/schulcloud-server:latest
     depends_on:
       - mongodb
       - redis
@@ -77,13 +77,10 @@ services:
   ### Schul-Cloud Client
   ###
   client:
-    #image: schulcloud/schulcloud-client:develop
+    image: schulcloud/schulcloud-client:${CLIENT_DOCKER_TAG}
     build:
-      context: ../../schulcloud-client
+      context: ${CLIENT_PATH:-/dev/null}
       dockerfile: Dockerfile
-    volumes:
-      - ../../schulcloud-client:/home/node/app
-      - /home/node/app/build
     depends_on:
       - server
     environment:
@@ -117,10 +114,10 @@ services:
     restart: unless-stopped
   ###
 
-  nuxtclient:
-    image: schulcloud/schulcloud-nuxt-client:${NUXT_DOCKER_TAG}
+  nuxt-client:
+    image: "schulcloud/schulcloud-nuxt-client:${NUXT_DOCKER_TAG}"
     build:
-      context: ../nuxt-client
+      context: ${NUXT_PATH:-/dev/null}
       dockerfile: deploy/Dockerfile.client
     depends_on:
       - server

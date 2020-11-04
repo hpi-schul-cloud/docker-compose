@@ -20,8 +20,6 @@ services:
     build:
       context: ../../filepreview
       dockerfile: Dockerfile
-    volumes:
-      - ${VOLUME_FILE_PREVIEW_DEV:-/dev/null}:/home/node/app
     environment:
       USERNAME: filepreview
       PASSWORD: strongPassword
