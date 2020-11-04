@@ -1,0 +1,35 @@
+version: "3"
+
+services:
+
+  server:
+    links:
+      - filepreview
+    environment:
+      - AWS_ENDPOINT_URL=https://dev-storage.schul-cloud.org:9001
+      ## store AWS credentials in a .env file and do not push them
+      # file preview service
+      - ENABLE_THUMBNAIL_GENERATION=true
+      - FILE_PREVIEW_SERVICE_URI=http://filepreview:3000/filepreview
+      - FILE_PREVIEW_CALLBACK_URI=http://server:3030/fileStorage/thumbnail/
+
+  ### Filepreview
+  ###
+  filepreview:
+    image: schulcloud/filepreview:latest
+    build:
+      context: ../../filepreview
+      dockerfile: Dockerfile
+    volumes:
+      - ${VOLUME_FILE_PREVIEW_DEV:-/dev/null}:/home/node/app
+    environment:
+      USERNAME: filepreview
+      PASSWORD: strongPassword
+      REDIS_HOST: redis
+    ports:
+      - "3000"
+    networks:
+      - default
+    depends_on:
+      - redis
+    restart: unless-stopped
