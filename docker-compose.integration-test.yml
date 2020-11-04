@@ -162,7 +162,7 @@ services:
       - MONGO_HOST=server-mongodb
       - REDIS_HOST=redis
     volumes:
-      - ../end-to-end-tests/ci/config/notification-service/testplatform.config.json:/usr/src/app/platforms/testplatform/config.json
+      - ../integration-tests/ci/config/notification-service/testplatform.config.json:/usr/src/app/platforms/testplatform/config.json
       - ./logs:/usr/src/app/logs
     depends_on:
       - server-mongodb
