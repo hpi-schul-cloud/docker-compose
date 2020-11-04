@@ -1,4 +1,5 @@
-source develop.env
+source ./envs/develop.env
+echo $SERVER_PATH
 docker-compose \
 	--env-file ./env/develop.env \
 	-f ./compose-files/docker-compose.yml \

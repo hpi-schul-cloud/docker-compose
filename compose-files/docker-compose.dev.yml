@@ -6,7 +6,7 @@ services:
     environment:
       - LOG_LEVEL=debug
     volumes:
-      - ${SEVRER_PATH}:/schulcloud-server
+      - ${SERVER_PATH}:/schulcloud-server
     command: npm run debug:container
 
   client:

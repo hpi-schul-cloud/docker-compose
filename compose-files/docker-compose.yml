@@ -36,7 +36,7 @@ services:
     restart: unless-stopped
 
   server:
-    image: schulcloud/schulcloud-server:${SERVER_DOCKER_TAG}
+    image: schulcloud/schulcloud-server:${SERVER_DOCKER_TAG:-not_exist}
     container_name: schulcloud-server
     build:
       context: ${SERVER_PATH:-/dev/null}

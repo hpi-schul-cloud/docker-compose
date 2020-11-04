@@ -2,6 +2,9 @@ version: "3"
 
 services:
 
+###########
+### need more configuration to use it
+###########
 ### Libre Office
   ###
   libreoffice:
