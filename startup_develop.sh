@@ -11,4 +11,4 @@ docker-compose \
 	-f ./compose-files/docker-compose.file.yml \
 	-f ./compose-files/docker-compose.superhero.yml \
 	-f ./compose-files/docker-compose.dev.yml \
-	$@
+	${@:-up -d}

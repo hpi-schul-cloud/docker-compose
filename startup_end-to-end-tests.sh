@@ -9,4 +9,4 @@ docker-compose \
 	-f ./compose-files/docker-compose.notification.yml \
 	-f ./compose-files/docker-compose.file.yml \
 	-f ./compose-files/docker-compose.end-to-end-tests.yml \
-	$@
+	${@:-up -d}
