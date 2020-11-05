@@ -7,6 +7,8 @@ services:
       - LOG_LEVEL=debug
     volumes:
       - ${SERVER_PATH}:/schulcloud-server
+    ports:
+      - "5959:5959"
     command: npm run debug:container
 
   client:
@@ -15,6 +17,9 @@ services:
     volumes:
       - ${CLIENT_PATH}:/home/node/app
       - /home/node/app/build
+    ports:
+      - "9310:9310" #debug port
+      - "7000:7000" #browser reload
     command: bash -c "gulp & gulp watch-reload"
 
   nuxt-client:

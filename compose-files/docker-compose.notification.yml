@@ -6,6 +6,7 @@ services:
     depends_on:
       - notification-service
     environment:
+      - NOTIFICATION_PLATFORM=testplatform
       - NOTIFICATION_URI=http://notification-service:3031
       - FORCE_SEND_EMAIL=true
 
@@ -20,9 +21,6 @@ services:
     container_name: notification-service
     ports:
       - 3031:3031
-    links:
-      - mongodb
-      - redis
     environment:
       - MONGO_HOST=mongodb
       - REDIS_HOST=redis
