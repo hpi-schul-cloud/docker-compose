@@ -1,4 +1,4 @@
-version: "3"
+version: "3.2"
 
 services:
 
@@ -86,7 +86,7 @@ services:
 ### database
 
   mongodb:
-    image: mongo:4.2
+    image: mongo:${MONGO_DOCKER_TAG:-latest}
     container_name: mongodb
     ports:
       - "27017:27017"
