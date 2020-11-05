@@ -25,6 +25,8 @@ services:
       - MONGO_HOST=mongodb
       - REDIS_HOST=redis
       #- NOTIFICATION_PORT=3031
+    volumes:
+      - ../data/notification-service/testplatform.config.json:/usr/src/app/platforms/testplatform/config.json
     depends_on:
       - mongodb
       - redis
