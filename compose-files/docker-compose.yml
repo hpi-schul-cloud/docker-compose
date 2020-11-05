@@ -21,7 +21,7 @@ services:
   ### Schul-Cloud Server
   ###
   mongodb:
-    image: mongo:${MONGODB_DOCKER_TAG:-latest} ## change tag in version.env
+    image: mongo:${MONGO_DOCKER_TAG:-latest} ## change tag in version.env
     container_name: mongodb
     ports:
       - "27017:27017"
