@@ -1,5 +1,6 @@
 set -a
 source ./envs/develop.env
+source ./envs/verison.env
 
 docker-compose \
 	--env-file ./env/develop.env \

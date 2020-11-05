@@ -21,7 +21,7 @@ services:
   ### Schul-Cloud Server
   ###
   mongodb:
-    image: mongo:4.2
+    image: mongo:${MONGODB_DOCKER_TAG:-latest} ## change tag in version.env
     container_name: mongodb
     ports:
       - "27017:27017"
@@ -30,13 +30,13 @@ services:
     restart: unless-stopped
 
   redis:
-    image: redis:latest
+    image: redis:${REDIS_DOCKER_TAG:-alpine} ## change tag in version.env
     command: ["redis-server", "--appendonly", "yes"]
     hostname: redis
     restart: unless-stopped
 
   server:
-    image: schulcloud/schulcloud-server:${SERVER_DOCKER_TAG:-not_exist}
+    image: schulcloud/schulcloud-server:${SERVER_DOCKER_TAG}
     container_name: schulcloud-server
     build:
       context: ${SERVER_PATH:-/dev/null}

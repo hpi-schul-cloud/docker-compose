@@ -15,7 +15,7 @@ services:
   ### Schul-Cloud Calendar
   ###
   calendar-postgres:
-    image: postgres:9.5
+    image: postgres:${POTSGRES_DOCKER_TAG:-alpine}
     ports:
       - "5432:5432"
     volumes:
@@ -29,9 +29,9 @@ services:
 
 
   calendar:
-    image: schulcloud/schulcloud-calendar
+    image: schulcloud/schulcloud-calendar:${CALENDAR_DOCKER_TAG:-latest}
     build:
-      context: ../../schulcloud-calendar
+      context: ${CALENDAR_PATH:-/dev/null}
       dockerfile: Dockerfile.develop
     ports:
       - "3000"

@@ -14,7 +14,7 @@ services:
   ###
   edtr:
     build:
-      context: ../edtrio
+      context: ../../edtrio
       dockerfile: Dockerfile.develop
     container_name: edtr
     volumes:
@@ -32,7 +32,7 @@ services:
 
   edtr-server:
     build:
-      context: ../schulcloud-editor
+      context: ../../schulcloud-editor
       dockerfile: Dockerfile.develop
     container_name: edtr-server
     depends_on:

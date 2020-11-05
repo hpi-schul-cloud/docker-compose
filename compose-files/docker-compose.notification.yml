@@ -13,13 +13,11 @@ services:
   ### Schul-Cloud Notifications
   ###
   notification-service:
-    image: schulcloud/node-notification-service:latest
+    image: schulcloud/node-notification-service:${NOTIFICATION_SERVICE_PATH_DOCKER_TAG:-latest}
     build:
-      context: ../../node-notification-service
+      context: ${NOTIFICATION_SERVICE_PATH:-/dev/null}
       dockerfile: Dockerfile
     container_name: notification-service
-    volumes:
-      - ../../node-notification-service:/usr/src/app
     ports:
       - 3031:3031
     links:
@@ -29,7 +27,6 @@ services:
       - MONGO_HOST=mongodb
       - REDIS_HOST=redis
       #- NOTIFICATION_PORT=3031
-      # - NODE_ENV=production
     depends_on:
       - mongodb
       - redis

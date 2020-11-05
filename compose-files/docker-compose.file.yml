@@ -16,9 +16,9 @@ services:
   ### Filepreview
   ###
   filepreview:
-    image: schulcloud/filepreview:latest
+    image: schulcloud/filepreview:${FILE_PREVIEW_DOCKER_TAG:-latest}
     build:
-      context: ../../filepreview
+      context: ${FILE_PREVIEW_PATH:-/dev/null}
       dockerfile: Dockerfile
     environment:
       USERNAME: filepreview

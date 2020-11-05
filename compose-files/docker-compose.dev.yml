@@ -29,3 +29,7 @@ services:
   #filepreview:
   #  volumes:
   #    - ${FILE_PREVIEW_PATH:-/dev/null}:/home/node/app
+
+  #notification-service:
+  #  volumes:
+  #    - ../../node-notification-service:/usr/src/app
