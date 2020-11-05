@@ -1,5 +1,12 @@
 version: "3"
 
+
+##############################################################################
+# THIS FILE SHOULD GET DELETED WHEN THE FOLLOWING PRs ARE MERGED
+# https://github.com/hpi-schul-cloud/nuxt-client/pull/314
+# https://github.com/hpi-schul-cloud/schulcloud-client/pull/1457
+# https://github.com/hpi-schul-cloud/end-to-end-tests/pull/31
+##############################################################################
 services:
   ### Schul-Cloud Server
   ###
@@ -17,7 +24,6 @@ services:
       dockerfile: Dockerfile
     depends_on:
       - server-mongodb
-      - redis
     environment:
       # ENV
       - NODE_ENV=production
@@ -25,13 +31,11 @@ services:
       - SC_TITLE=HPI Schulcloud
       - SC_SHORT_TITLE=Schulcloud
       # SMTP
-      - FORCE_SEND_EMAIL=true
-      # Notifications service
-      - NOTIFICATION_PLATFORM=testplatform
-      - NOTIFICATION_URI=http://notification-service:3031
+      # - SMTP=
+      # - SMTP_SENDER=
       # Storage
       - AWS_ENDPOINT_URL=https://dev-storage.schul-cloud.org:9001
-      #- AWS_ENDPOINT_URL=http://localhost:9000
+      # - AWS_ENDPOINT_URL=http://localhost:9000
       ## keys for local s3 storage
       # - AWS_ACCESS_KEY=
       # - AWS_SECRET_ACCESS_KEY=
@@ -39,7 +43,6 @@ services:
       - MONGO_URI=mongodb://server-mongodb:27017/schulcloud
       - DB_URL=mongodb://server-mongodb:27017/schulcloud
       - DATABASE__URL=mongodb://server-mongodb:27017/schulcloud
-      - REDIS_URI=redis://redis:6379
       - PORT=3030
       - CONTENT_URI=https://content.schul-cloud.org
       # RocketChat
@@ -52,14 +55,8 @@ services:
       - IGNORE_DISCOVERABILITY=true
       # BRUTE FORCE PROTECTION
       - LOGIN_BLOCK_TIME=3
-      # Edu-Sharing
-      - ES_DOMAIN=https://mv-repo.schul-cloud.org
-      - ES_USER
-      - ES_PASSWORD
-      - SECRET_ES_MERLIN_USERNAME
-      - SECRET_ES_MERLIN_PW
       # FEATURE TOGGLES
-      - LERNSTORE_MODE=EDUSHARING
+      - LERNSTORE_MODE=LEGACY
     ports:
       - "3030:3030"
       - "5959:5959"
@@ -92,12 +89,12 @@ services:
       - HOST=http://localhost:3100
       - BACKEND_URL=http://server:3030
       - PUBLIC_BACKEND_URL=https://localhost:3030
-        # - LIBRE_OFFICE_CLIENT_URL=http://localhost:9980
-        # - ROCKET_CHAT_URI=https://chat.schulcloud.local
+      # - LIBRE_OFFICE_CLIENT_URL=http://localhost:9980
+      # - ROCKET_CHAT_URI=https://chat.schulcloud.local
       # FEATURE TOGGLES
       - FEATURE_TEAMS_ENABLED=true
       - FEATURE_EXTENSIONS_ENABLED=true
-      - LERNSTORE_MODE=EDUSHARING
+      - LERNSTORE_MODE=LEGACY
       # - ROCKETCHAT_SERVICE_ENABLED=true
       # - EDTR_SOURCE=https://cdn.jsdelivr.net/gh/schul-cloud/edtrio@e9d3bb9d66092bafa07846269c8fc6f9d5fb0559/dist/index.js
       # BRUTE FORCE PROTECTION
@@ -106,29 +103,6 @@ services:
       - "3100:3100"
     restart: unless-stopped
     command: npm run start
-
-  nuxtclient:
-    build:
-      context: ../nuxt-client
-      dockerfile: deploy/Dockerfile.client
-    depends_on:
-      - server
-      - client
-    environment:
-      # ENV
-      - NODE_ENV=production
-      - TZ=Europe/Berlin
-      - LEGACY_CLIENT_URL=http://client:3100
-      - HOST=0.0.0.0
-      - API_URL=http://server:3030
-      # FEATURE TOGGLES
-      - FEATURE_TEAMS_ENABLED=true
-      - LERNSTORE_MODE=EDUSHARING
-      # Theme and Titles
-      - SC_THEME=default
-    ports:
-      - "4000:4000"
-    restart: unless-stopped
 
   # Selenium Server
   selenium-hub:
@@ -154,36 +128,6 @@ services:
 #     environment:
 #       - HUB_HOST=selenium-hub
 #       - HUB_PORT=4444
-
-  # Notification Service
-
-  notification-service:
-    build:
-      context: ../node-notification-service
-      dockerfile: Dockerfile
-    container_name: notification-service
-    ports:
-      - 3031:3031
-    environment:
-      - MONGO_HOST=server-mongodb
-      - REDIS_HOST=redis
-    volumes:
-      - ../end-to-end-tests/ci/config/notification-service/testplatform.config.json:/usr/src/app/platforms/testplatform/config.json
-      - ./logs:/usr/src/app/logs
-    depends_on:
-      - server-mongodb
-      - redis
-      - mail
-    command: sh -c "npm run build & npm run start"
-
-
-  redis:
-    image: redis:5.0.3
-
-  mail:
-    image: schickling/mailcatcher
-    ports:
-      - 1080:1080
 
 volumes:
   data-server-mongodb:
