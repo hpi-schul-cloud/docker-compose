@@ -6,6 +6,8 @@ services:
 
   client:
     command: npm run start
+    environment:
+      - DOCKER=true
 
   # Selenium Server
   selenium-hub:
