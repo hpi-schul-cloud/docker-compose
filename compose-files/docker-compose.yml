@@ -115,7 +115,7 @@ services:
     restart: unless-stopped
   ###
 
-  nuxt-client:
+  nuxtclient:
     image: "schulcloud/schulcloud-nuxt-client:${NUXT_DOCKER_TAG}"
     build:
       context: ${NUXT_PATH:-/dev/null}
