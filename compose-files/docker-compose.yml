@@ -30,7 +30,7 @@ services:
     restart: unless-stopped
 
   redis:
-    image: redis:${REDIS_DOCKER_TAG:-alpine} ## change tag in version.env
+    image: redis:${REDIS_DOCKER_TAG:-latest} ## change tag in version.env
     command: ["redis-server", "--appendonly", "yes"]
     hostname: redis
     restart: unless-stopped

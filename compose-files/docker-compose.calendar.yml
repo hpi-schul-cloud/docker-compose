@@ -15,7 +15,7 @@ services:
   ### Schul-Cloud Calendar
   ###
   calendar-postgres:
-    image: postgres:${POSTGRES_DOCKER_TAG:-alpine}
+    image: postgres:${POSTGRES_DOCKER_TAG:-latest}
     ports:
       - "5432:5432"
     volumes:
