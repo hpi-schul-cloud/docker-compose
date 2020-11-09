@@ -22,7 +22,7 @@ services:
       - "7000:7000" #browser reload
     command: bash -c "gulp & gulp watch-reload"
 
-  nuxt-client:
+  nuxtclient:
     volumes:
       - ${NUXT_PATH}:/app
     command: npm run dev:nuxt
