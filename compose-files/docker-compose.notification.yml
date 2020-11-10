@@ -14,7 +14,7 @@ services:
   ### Schul-Cloud Notifications
   ###
   notification-service:
-    image: schulcloud/node-notification-service:${NOTIFICATION_SERVICE_PATH_DOCKER_TAG:-latest}
+    #image: schulcloud/node-notification-service:${NOTIFICATION_SERVICE_PATH_DOCKER_TAG:-latest}
     build:
       context: ${NOTIFICATION_SERVICE_PATH:-/dev/null}
       dockerfile: Dockerfile
@@ -31,7 +31,7 @@ services:
       - mongodb
       - redis
       - mail
-    #command: sh -c "npm run build && npm run debug"
+    command: sh -c "npm run build && npm run start"
 
   mail:
     image: schickling/mailcatcher
