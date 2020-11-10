@@ -2,24 +2,24 @@ version: "3"
 
 services:
   server:
-    env_file:
-      - ../envs/end-to-end-tests.env
+    # env_file:
+    #   - ../envs/end-to-end-tests.env
     command: npm run start
 
   client:
-    env_file:
-      - ../envs/end-to-end-tests.env
+    # env_file:
+    #   - ../envs/end-to-end-tests.env
     environment:
       - DOCKER=true
     command: npm run start
 
-  nuxtclient:
-    env_file:
-      - ../envs/end-to-end-tests.env
+  #nuxtclient:
+    # env_file:
+    #   - ../envs/end-to-end-tests.env
 
   notification-service:
-    env_file:
-      - ../envs/end-to-end-tests.env
+    #env_file:
+    #  - ../envs/end-to-end-tests.env
 
   # Selenium Server
   selenium-hub:
