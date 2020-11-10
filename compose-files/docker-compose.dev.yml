@@ -3,6 +3,8 @@ version: "3"
 services:
 
   server:
+    env_file:
+      - ../envs/develop.env
     environment:
       - LOG_LEVEL=debug
     volumes:
@@ -12,6 +14,8 @@ services:
     command: npm run debug:container
 
   client:
+    env_file:
+      - ../envs/develop.env
     environment:
       - LOG_LEVEL=debug
     volumes:
@@ -23,6 +27,8 @@ services:
     command: bash -c "gulp & gulp watch-reload"
 
   nuxtclient:
+    env_file:
+        - ../envs/develop.env
     volumes:
       - ${NUXT_PATH}:/app
     command: npm run dev:nuxt
