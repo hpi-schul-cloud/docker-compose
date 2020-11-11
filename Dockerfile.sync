@@ -1,0 +1,7 @@
+ARG NODE_IMAGE_TAG="12.16.1-slim"
+
+FROM node:${NODE_IMAGE_TAG}
+
+WORKDIR /schulcloud-synapse-synchronization
+
+ENV TZ=Europe/Berlin

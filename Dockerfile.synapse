@@ -1,0 +1,7 @@
+FROM matrixdotorg/synapse:v1.22.1
+
+ADD https://raw.githubusercontent.com/devture/matrix-synapse-shared-secret-auth/master/shared_secret_authenticator.py /usr/local/lib/python3.7/site-packages/shared_secret_authenticator.py
+RUN chmod 755 /usr/local/lib/python3.7/site-packages/shared_secret_authenticator.py
+
+ADD https://raw.githubusercontent.com/hpi-schul-cloud/synapse-event-checker/master/synapse_event_checker/eventchecker.py /usr/local/lib/python3.7/site-packages/synapse_event_checker.py
+RUN chmod 755 /usr/local/lib/python3.7/site-packages/synapse_event_checker.py

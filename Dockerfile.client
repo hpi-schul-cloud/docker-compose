@@ -1,0 +1,25 @@
+FROM node:12.16-alpine
+
+RUN apk update && apk upgrade && apk add --no-cache \
+    autoconf \
+    automake \
+    build-base \
+    git \
+    libtool \
+    make \
+    nasm \
+    pkgconfig \
+    python2 \
+    tzdata \
+    curl \
+    zlib-dev
+
+EXPOSE 3100
+
+WORKDIR /schulcloud-client
+
+# fix for intergrations tests
+RUN npm set unsafe-perm true \
+    && npm install -g \
+    nodemon \
+    gulp

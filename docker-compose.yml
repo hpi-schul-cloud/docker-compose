@@ -1,0 +1,195 @@
+version: "3"
+
+services:
+  ### Schul-Cloud Server
+  ###
+  server-mongodb:
+    image: mongo:4.2
+    ports:
+      - "27017:27017"
+    volumes:
+      - data-server-mongodb:/data/db
+    restart: unless-stopped
+
+  server-rabbitmq:
+    image: rabbitmq:3.8.9-management
+    ports:
+      - "5672:5672"
+      - "15672:15672" # management plugin user: guest / guest
+    restart: unless-stopped
+
+  server:
+    build:
+      context: ./schulcloud-server
+      dockerfile: ../Dockerfile.server
+    volumes:
+      - ./schulcloud-server:/schulcloud-server
+    depends_on:
+      - server-mongodb
+      - server-rabbitmq
+    environment:
+      # ENV
+      - NODE_ENV=development
+      - HOST=http://localhost:3030
+      - SC_TITLE=HPI Schulcloud
+      - SC_SHORT_TITLE=Schulcloud
+
+      # SMTP
+      # - SMTP=
+      # - SMTP_SENDER=
+
+      # Storage
+      - AWS_ENDPOINT_URL=https://dev-storage.schul-cloud.org:9001
+      #- AWS_ENDPOINT_URL=http://localhost:9000
+      ## keys for local s3 storage
+      # - AWS_ACCESS_KEY=
+      # - AWS_SECRET_ACCESS_KEY=
+
+      # URIs and Port
+      - MONGO_HOST=server-mongodb # for DB setup
+      - MONGO_URI=mongodb://server-mongodb:27017/schulcloud
+      - DB_URL=mongodb://server-mongodb:27017/schulcloud
+      #- CALENDAR_URI=http://calendar:3000
+      - CONTENT_URI=https://consent.schul-cloud.org
+      - NOTIFICATION_URI=http://notification:3030
+      - PORT=3030
+
+      # RocketChat
+      #- ROCKET_CHAT_URI=https://chat.schulcloud.local
+      # - ROCKET_CHAT_ADMIN_TOKEN=
+      # - ROCKET_CHAT_ADMIN_TOKEN=
+      # - ROCKET_CHAT_ADMIN_ID=
+
+      # Matrix Messenger
+      - FEATURE_MATRIX_MESSENGER_ENABLED=true
+      - MATRIX_MESSENGER__URI=http://synapse:8008
+      - MATRIX_MESSENGER__SERVERNAME=matrix.local
+      - MATRIX_MESSENGER__SECRET=HmRJMD4ivBA0Y6viUuEkbbPsTUqatGOvMeO3HJTIVOzEhZdCMG2zZ0OXBdmJdlKg
+      - MATRIX_MESSENGER__STUDENT_ROOM_CREATION=true
+      - MATRIX_MESSENGER__WELCOME_MESSAGE_STUDENT=Willkommen im Messenger der HPI Schul-Cloud!<br />Du bist neu hier und möchtest gerne mehr über die Grundfunktionen des Messengers erfahren? Dann schaue dir <a href="https://docs.hpi-schul-cloud.org/pages/viewpage.action?pageId=113651573">DIESE ANLEITUNG</a> an.<br />Wir wünschen euch einen konstruktiven und respektvollen Austausch untereinander!<br />Euer HPI Schul-Cloud Team 🙂
+      - MATRIX_MESSENGER__WELCOME_MESSAGE_TEACHER=Willkommen im Messenger der HPI Schul-Cloud!<br />Du bist neu hier und möchtest gerne mehr über die Grundfunktionen des Messengers erfahren? Dann schaue dir <a href="https://docs.hpi-schul-cloud.org/pages/viewpage.action?pageId=113650243">DIESE ANLEITUNG</a> an.<br />Wir wünschen euch einen konstruktiven und respektvollen Austausch untereinander!<br />Euer HPI Schul-Cloud Team 🙂
+      - FEATURE_RABBITMQ_ENABLED=true
+      - RABBITMQ_URI=amqp://server-rabbitmq
+
+      # AUTH Secret
+      # - AUTHENTICATION=
+      - IGNORE_DISCOVERABILITY=true
+
+      # File preview service
+      - ENABLE_THUMBNAIL_GENERATION=true
+      - FILE_PREVIEW_SERVICE_URI=http://filepreview:3000/filepreview
+      - FILE_PREVIEW_CALLBACK_URI=http://server:3030/fileStorage/thumbnail/
+
+    ports:
+      - "3030:3030"
+      - "5959:5959"
+    networks:
+      - storage
+      - default
+    restart: unless-stopped
+    command: sh -c "npm install --no-audit --prefer-offline --no-package-lock --verbose --no-fund --no-optional && npm run debug:container"
+  ###
+
+  ### Schul-Cloud Client
+  ###
+  client:
+    #image: schulcloud/schulcloud-client:develop
+    build:
+      context: ./schulcloud-client
+      dockerfile: ../Dockerfile.client
+    volumes:
+      - ./schulcloud-client:/schulcloud-client
+    depends_on:
+      - server
+    environment:
+      # ENV
+      - NODE_ENV=development
+      - DOCKER=true
+      #- CALENDAR_SERVICE_ENABLED=true
+      - TZ=Europe/Berlin
+
+      # Theme and Titles
+      - SC_TITLE=HPI Schulcloud
+      - SC_SHORT_TITLE=Schulcloud
+      - SC_PRODUCTNAME=Hauptschule
+      - SC_FEDERALSTATE=mainstate
+
+      # URIs
+      - HOST=http://localhost:3100
+      - BACKEND_URL=http://server:3030
+      - PUBLIC_BACKEND_URL=https://localhost:3030
+      #- LIBRE_OFFICE_CLIENT_URL=http://localhost:9980
+      #- ROCKET_CHAT_URI=https://chat.schulcloud.local
+
+      # Matrix Messenger
+      - FEATURE_MATRIX_MESSENGER_ENABLED=true
+      - MATRIX_MESSENGER__URI=http://localhost:8008
+      - MATRIX_MESSENGER__EMBED_URI=https://embed.test.messenger.schule # or http://localhost:8099
+      - MATRIX_MESSENGER__DISCOVER_URI=http://matrix.local
+      - MATRIX_MESSENGER__SCHOOL_SETTINGS_VISIBLE=true
+      - MATRIX_MESSENGER__SCHOOL_ROOM_ENABLED=true
+      - MATRIX_MESSENGER__STUDENT_ROOM_CREATION=true
+
+      # FEATURE TOGGLES
+      - FEATURE_TEAMS_ENABLED=true
+      - LERNSTORE_MODE=LEGACY
+      #- ROCKETCHAT_SERVICE_ENABLED=true
+      - EDTR_SOURCE=https://cdn.jsdelivr.net/gh/schul-cloud/edtrio@e9d3bb9d66092bafa07846269c8fc6f9d5fb0559/dist/index.js
+    ports:
+      - "3100:3100"
+      - "9310:9310" # debug port
+      - "7000:7000"
+    restart: unless-stopped
+    command: sh -c "npm install --no-audit --prefer-offline --no-package-lock --verbose --no-fund --no-optional && gulp watch-reload"
+  ###
+
+  ### Matrix Messenger
+  sync:
+    build:
+      context: ./schulcloud-synapse-synchronization
+      dockerfile: ../Dockerfile.sync
+    volumes:
+      - ./schulcloud-synapse-synchronization:/schulcloud-synapse-synchronization
+    depends_on:
+      - server-rabbitmq
+      - synapse
+    environment:
+      # ENV
+      - NODE_ENV=development
+
+      # RabbitMQ
+      - RABBITMQ_URI=amqp://server-rabbitmq
+      - RABBIT_MQ_QUEUE=matrix_sync_populated
+      - MATRIX_SYNC_USER_DISPLAYNAME=HPI Sync Bot
+
+      # Synapse
+      - MATRIX_MESSENGER__URI=http://synapse:8008
+      - MATRIX_MESSENGER__SERVERNAME=matrix.local
+      - MATRIX_MESSENGER__SECRET=HmRJMD4ivBA0Y6viUuEkbbPsTUqatGOvMeO3HJTIVOzEhZdCMG2zZ0OXBdmJdlKg
+    restart: unless-stopped
+    command: sh -c "npm install --no-audit --prefer-offline --no-package-lock --verbose --no-fund --no-optional && npm run start" # npm run startd in next version of sync
+
+  synapse:
+    build:
+      context: ./synapse
+      dockerfile: ../Dockerfile.synapse
+    volumes:
+      - ./synapse:/data
+    ports:
+      - "8008:8008"
+
+  embed:
+    image: schulcloud/riot-web:feature-embed_20cf5f9d81a24deeaefdcdd5af66ef1019cfb1f5
+    ports:
+      - "8099:80"
+  ###
+
+networks:
+  storage:
+    ipam:
+      driver: default
+      config:
+        - subnet: "172.16.13.0/24"
+
+volumes:
+  data-server-mongodb:

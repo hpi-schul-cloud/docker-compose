@@ -1,0 +1,63 @@
+version: "3"
+
+#
+# Work in Progress - not ready to use
+#
+
+services:
+
+  ### Schul-Cloud OAuth
+  ###
+  hydra-postgres:
+    image: postgres:9.6
+    environment:
+      - SECRETS_SYSTEM=supersecurityperfavore
+      - DSN=postgres://hydra:secret@hydra-postgres:5432/hydra?sslmode=disable
+      - TLS_ALLOW_TERMINATION_FROM=172.18.0.0/24
+      - OIDC_SUBJECT_IDENTIFIERS_PAIRWISE_SALT=atleast8
+      - URLS_SELF_ISSUER=http://localhost:9000
+      - SC_FRONTEND=http://localhost:3100
+      - POSTGRES_USER=hydra
+      - POSTGRES_PASSWORD=secret
+      - POSTGRES_DB=hydra
+      - SERVE_PARAMS=--dangerous-force-http
+    ports:
+      - 5433:5432
+    volumes:
+      - data-hydra:/var/lib/postgresql/data
+    restart: on-failure
+
+  hydra-migrate-database:
+    image: oryd/hydra:v1.0.0-rc.14
+    command: ["migrate", "sql", "--yes", "postgres://hydra:secret@hydra-postgres:5432/hydra?sslmode=disable"]
+
+  hydra-host:
+    image: oryd/hydra:v1.0.0-rc.14
+    ports:
+      #- 9000:4444
+      - 9001:4445
+    environment:
+      - SECRETS_SYSTEM=supersecurityperfavore
+      - DSN=postgres://hydra:secret@hydra-postgres:5432/hydra?sslmode=disable
+      - TLS_ALLOW_TERMINATION_FROM=172.18.0.0/24
+      - OIDC_SUBJECT_IDENTIFIERS_PAIRWISE_SALT=atleast8
+      - URLS_SELF_ISSUER=http://localhost:9000
+      - SC_FRONTEND=http://localhost:3100
+      - POSTGRES_USER=hydra
+      - POSTGRES_PASSWORD=secret
+      - POSTGRES_DB=hydra
+      - URLS_LOGIN=http://localhost:3100/oauth2/login
+      - URLS_CONSENT=http://localhost:3100/oauth2/consent
+      - OIDC_SUBJECT_IDENTIFIERS_ENABLED=public,pairwise
+    depends_on:
+      - hydra-migrate-database
+    restart: on-failure
+    command: ["serve", "all", "--dangerous-force-http"]
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: any
+  ##
+
+volumes:
+  data-hydra:

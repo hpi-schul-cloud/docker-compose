@@ -1,0 +1,14 @@
+FROM node:lts-alpine
+
+EXPOSE 3030
+WORKDIR /schulcloud-server
+
+RUN apk update && apk upgrade && apk add --no-cache \
+    git  \
+    make  \
+    python  \
+    tzdata  \
+    curl \
+    mongodb-tools
+
+ENV TZ=Europe/Berlin

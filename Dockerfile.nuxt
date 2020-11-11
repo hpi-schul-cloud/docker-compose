@@ -1,0 +1,7 @@
+FROM node:12.16-alpine
+
+RUN apk add git
+
+EXPOSE 4000
+
+WORKDIR /nuxt-client

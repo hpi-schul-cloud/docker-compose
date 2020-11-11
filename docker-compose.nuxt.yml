@@ -1,0 +1,34 @@
+version: "3"
+
+#
+# Work in Progress - not ready to use
+#
+
+services:
+  ### Nuxt Client
+  ###
+  nuxt:
+    build:
+      context: ./nuxt-client
+      dockerfile: ../Dockerfile.nuxt
+    volumes:
+      - ./nuxt-client:/nuxt-client
+    depends_on:
+      - server
+      - client
+    environment:
+      # ENV
+      - NODE_ENV=development
+      - TZ=Europe/Berlin
+      - LEGACY_CLIENT_URL=http://client:3100
+      - HOST=0.0.0.0
+      - API_URL=http://localhost:3030 # public url accessible from the browser
+      # FEATURE TOGGLES
+      - FEATURE_TEAMS_ENABLED=true
+      # Theme and Titles
+      - SC_THEME=default
+    ports:
+      - "4000:4000"
+    restart: unless-stopped
+    command: sh -c "npm install --no-audit --prefer-offline --no-package-lock --verbose --no-fund --no-optional && npm run dev:nuxt"
+  ###
