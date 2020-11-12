@@ -30,7 +30,6 @@ services:
       - mongodb
       - redis
       - mail
-    #command: sh -c "npm run build && npm run start"
 
   mail:
     image: schickling/mailcatcher

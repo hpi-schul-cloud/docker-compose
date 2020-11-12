@@ -1,3 +1,4 @@
+#!/bin/bash
 set -a
 source ./envs/version.env
 source ./envs/develop.env
