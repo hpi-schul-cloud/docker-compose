@@ -7,9 +7,9 @@ source ./envs/end-to-end-tests.env
 
 docker-compose \
 	--env-file ./env/end-to-end-tests.env \
-	-f ./compose-files/docker-compose.yml \
-	-f ./compose-files/docker-compose.notification.yml \
-	-f ./compose-files/docker-compose.end-to-end-tests.yml \
+	-f ${COMPOSE_FILES_PATH}/docker-compose.yml \
+	-f ${COMPOSE_FILES_PATH}/docker-compose.notification.yml \
+	-f ${COMPOSE_FILES_PATH}/docker-compose.end-to-end-tests.yml \
 	${@:-up -d}
 
 

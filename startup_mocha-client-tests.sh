@@ -6,5 +6,5 @@ source ./envs/end-to-end-tests.env
 
 docker-compose \
 	--env-file ./env/end-to-end-tests.env \
-	-f ./compose-files/docker-compose.yml \
+	-f ${COMPOSE_FILES_PATH}/docker-compose.yml \
 	${@:-up -d client}
