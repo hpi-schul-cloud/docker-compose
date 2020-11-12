@@ -1,6 +1,6 @@
 #!/bin/bash
 set -a
-source ./envs/version.env
+source ./envs/default.env
 source ./envs/develop.env
 [ -f ./envs/.env ] && source ./envs/.env
 
