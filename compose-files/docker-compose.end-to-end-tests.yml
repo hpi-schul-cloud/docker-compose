@@ -17,7 +17,7 @@ services:
     # env_file:
     #   - ../envs/end-to-end-tests.env
 
-  notification-service:
+  #notification-service:
     #env_file:
     #  - ../envs/end-to-end-tests.env
 
