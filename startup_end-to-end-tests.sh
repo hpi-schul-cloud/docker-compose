@@ -2,7 +2,7 @@
 set -a
 source ./envs/version.env
 source ./envs/end-to-end-tests.env
-source ./envs/.env
+[ -f ./envs/.env ] && source ./envs/.env
 
 
 docker-compose \

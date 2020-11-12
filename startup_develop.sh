@@ -2,7 +2,7 @@
 set -a
 source ./envs/version.env
 source ./envs/develop.env
-source ./envs/.env
+[ -f ./envs/.env ] && source ./envs/.env
 
 docker-compose \
 	--env-file ./env/develop.env \

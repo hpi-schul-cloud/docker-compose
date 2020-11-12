@@ -1,6 +1,8 @@
+#!/bin/bash
 set -a
-source ./envs/end-to-end-tests.env
 source ./envs/version.env
+source ./envs/end-to-end-tests.env
+[ -f ./envs/.env ] && source ./envs/.env
 
 docker-compose \
 	--env-file ./env/end-to-end-tests.env \
