@@ -5,6 +5,8 @@ services:
   server:
     links:
       - ldap
+    depends_on:
+      - ldap
     environment:
       - LDAP_PASSWORD_ENCRYPTION_KEY=iamasecretmonkeyhelpingencrypt
       - SYNC_API_KEY=Schulcloud1!Schulcloud1!
