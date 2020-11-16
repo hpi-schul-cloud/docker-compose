@@ -17,7 +17,7 @@ services:
   #    - default
 
   ###
-  
+
   ### Schul-Cloud Server
   ###
   mongodb:
@@ -33,17 +33,17 @@ services:
     #image: schulcloud/schulcloud-server:latest
     container_name: schulcloud-server
     build:
-      context: ../schulcloud-server
+      context: ../../schulcloud-server
       dockerfile: Dockerfile
     volumes:
-      - ../schulcloud-server:/schulcloud-server
+      - ../../schulcloud-server:/schulcloud-server
     depends_on:
       - mongodb
       - notification-service
       - redis
     environment:
       # ENV
-      - NODE_ENV=development
+      - NODE_ENV=production
       - HOST=http://localhost:3030
       - SC_TITLE=HPI Schulcloud
       - SC_SHORT_TITLE=Schulcloud
@@ -63,13 +63,8 @@ services:
       - REDIS_URI=redis://redis:6379
       - CALENDAR_URI=http://calendar:3000
       - CONTENT_URI=https://consent.schul-cloud.org
-      - NOTIFICATION_URI=http://notification:3031
+      - NOTIFICATION_URI=http://notification-service:3031
       - PORT=3030
-      # RocketChat
-      - ROCKET_CHAT_URI=https://chat.schulcloud.local
-#      - ROCKET_CHAT_ADMIN_TOKEN=
-    #  - ROCKET_CHAT_ADMIN_TOKEN= 
-    #  - ROCKET_CHAT_ADMIN_ID=
       # AUTH Secret
       # - AUTHENTICATION=
       - IGNORE_DISCOVERABILITY=true
@@ -80,6 +75,7 @@ services:
       # FEATURE TOGGLES
       - LERNSTORE_MODE=LEGACY
       - FORCE_SEND_EMAIL=true
+      - LOG_LEVEL=debug
     ports:
       - "3030:3030"
       - "5959:5959"
@@ -87,7 +83,6 @@ services:
       - storage
       - default
     restart: unless-stopped
-    command: npm run debug:container
   ###
 
   ### Schul-Cloud Client
@@ -95,10 +90,10 @@ services:
   client:
     #image: schulcloud/schulcloud-client:develop
     build:
-      context: ../schulcloud-client
+      context: ../../schulcloud-client
       dockerfile: Dockerfile
     volumes:
-      - ../schulcloud-client:/home/node/app
+      - ../../schulcloud-client:/home/node/app
       - /home/node/app/build
     depends_on:
       - server
@@ -126,12 +121,12 @@ services:
       - LERNSTORE_MODE=LEGACY
       - ROCKETCHAT_SERVICE_ENABLED=true
       - EDTR_SOURCE=https://cdn.jsdelivr.net/gh/schul-cloud/edtrio@e9d3bb9d66092bafa07846269c8fc6f9d5fb0559/dist/index.js
+      - LOG_LEVEL=debug
     ports:
       - "3100:3100"
       - "9310:9310" #debug port
       - "7000:7000"
     restart: unless-stopped
-    command: bash -c "gulp & gulp watch-reload"
   ###
 
 
@@ -154,7 +149,7 @@ services:
   calendar:
     image: schulcloud/schulcloud-calendar
     build:
-      context: ../schulcloud-calendar
+      context: ../../schulcloud-calendar
       dockerfile: Dockerfile.develop
     ports:
       - "3000"
@@ -185,13 +180,13 @@ services:
   ###
 
   notification-service:
-    #image: friedow/node-notification-service:latest
+    image: schulcloud/node-notification-service:latest
     build:
-      context: ../node-notification-service
+      context: ../../node-notification-service
       dockerfile: Dockerfile
     container_name: notification-service
     volumes:
-      - ../node-notification-service:/usr/src/app
+      - ../../node-notification-service:/usr/src/app
     ports:
       - 3031:3031
     links:
@@ -213,14 +208,6 @@ services:
     ports:
       - 1080:1080
 
-  ### Schul-Cloud Content
-  ###
-  
-  ###
-
-
-  
-  
   ### Filepreview
   ###
   redis:
@@ -232,10 +219,10 @@ services:
   filepreview:
     image: schulcloud/filepreview:latest
     build:
-      context: ../filepreview
+      context: ../../filepreview
       dockerfile: Dockerfile
     volumes:
-      - ../filepreview:/home/node/app
+      - ../../filepreview:/home/node/app
     environment:
       USERNAME: filepreview
       PASSWORD: strongPassword
@@ -256,8 +243,6 @@ networks:
       driver: default
       config:
         - subnet: "172.16.13.0/24"
-
-
 
 volumes:
   data-mongodb:
