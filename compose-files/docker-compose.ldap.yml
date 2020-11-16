@@ -1,4 +1,4 @@
-version: "3"
+version: "3.2"
 
 services:
 
@@ -14,7 +14,7 @@ services:
   ###################
   ### ldap
   ldap:
-    image: osixia/openldap:stable
+    image: osixia/openldap:${LDAP_DOCKER_TAG:-stable}
     container_name: openldap
     environment:
       #LDAP_LOG_LEVEL: "256"

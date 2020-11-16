@@ -1,4 +1,4 @@
-version: "3"
+version: "3.2"
 
 services:
 
@@ -21,7 +21,7 @@ services:
   ### Schul-Cloud Server
   ###
   mongodb:
-    image: mongo:4.2
+    image: mongo:${MONGO_DOCKER_TAG:-latest} ## change tag in version.env
     container_name: mongodb
     ports:
       - "27017:27017"
@@ -29,52 +29,41 @@ services:
       - data-mongodb:/data/db
     restart: unless-stopped
 
+  redis:
+    image: redis:${REDIS_DOCKER_TAG:-alpine} ## change tag in version.env
+    command: ["redis-server", "--appendonly", "yes"]
+    hostname: redis
+    restart: unless-stopped
+
   server:
-    #image: schulcloud/schulcloud-server:latest
+    image: schulcloud/schulcloud-server:${SERVER_DOCKER_TAG}
     container_name: schulcloud-server
     build:
-      context: ../../schulcloud-server
+      context: ${SERVER_PATH:-/dev/null}
       dockerfile: Dockerfile
-    volumes:
-      - ../../schulcloud-server:/schulcloud-server
+      cache_from:
+        - schulcloud/schulcloud-server:latest
     depends_on:
       - mongodb
-      - notification-service
       - redis
     environment:
       # ENV
-      - NODE_ENV=production
+      #- NODE_ENV=production
       - HOST=http://localhost:3030
       - SC_TITLE=HPI Schulcloud
       - SC_SHORT_TITLE=Schulcloud
-      # SMTP
-      # - SMTP=
-      # - SMTP_SENDER=
-      # Storage
-      - AWS_ENDPOINT_URL=https://dev-storage.schul-cloud.org:9001
-      #- AWS_ENDPOINT_URL=http://localhost:9000
-      ## keys for local s3 storage
-      # - AWS_ACCESS_KEY=
-      # - AWS_SECRET_ACCESS_KEY=
       # URIs and Port
       - MONGO_URI=mongodb://mongodb:27017/schulcloud
       - DB_URL=mongodb://mongodb:27017/schulcloud
       - DATABASE__URL=mongodb://server-mongodb:27017/schulcloud
       - REDIS_URI=redis://redis:6379
-      - CALENDAR_URI=http://calendar:3000
-      - CONTENT_URI=https://consent.schul-cloud.org
-      - NOTIFICATION_URI=http://notification-service:3031
+      - CONTENT_URI=https://consent.schul-cloud.org #lernstore
       - PORT=3030
       # AUTH Secret
       # - AUTHENTICATION=
       - IGNORE_DISCOVERABILITY=true
-      # file preview service
-      - ENABLE_THUMBNAIL_GENERATION=true
-      - FILE_PREVIEW_SERVICE_URI=http://filepreview:3000/filepreview
-      - FILE_PREVIEW_CALLBACK_URI=http://server:3030/fileStorage/thumbnail/
       # FEATURE TOGGLES
       - LERNSTORE_MODE=LEGACY
-      - FORCE_SEND_EMAIL=true
       - LOG_LEVEL=debug
     ports:
       - "3030:3030"
@@ -83,25 +72,21 @@ services:
       - storage
       - default
     restart: unless-stopped
-  ###
 
+  ###
   ### Schul-Cloud Client
   ###
   client:
-    #image: schulcloud/schulcloud-client:develop
+    image: schulcloud/schulcloud-client:${CLIENT_DOCKER_TAG}
     build:
-      context: ../../schulcloud-client
+      context: ${CLIENT_PATH:-/dev/null}
       dockerfile: Dockerfile
-    volumes:
-      - ../../schulcloud-client:/home/node/app
-      - /home/node/app/build
     depends_on:
       - server
     environment:
       # ENV
-      - NODE_ENV=development
+      #- NODE_ENV=development
       - DOCKER=true
-      - CALENDAR_SERVICE_ENABLED=true
       #- TZ=Europe/Berlin
       # Theme and Titles
       - SC_TITLE=HPI Schulcloud
@@ -114,14 +99,14 @@ services:
       - HOST=http://localhost:3100
       - BACKEND_URL=http://server:3030
       - PUBLIC_BACKEND_URL=https://localhost:3030
-      - LIBRE_OFFICE_CLIENT_URL=http://localhost:9980
-      - ROCKET_CHAT_URI=https://chat.schulcloud.local
+      #- LIBRE_OFFICE_CLIENT_URL=http://localhost:9980
+      #- ROCKET_CHAT_URI=https://chat.schulcloud.local
       # FEATURE TOGGLES
       - FEATURE_TEAMS_ENABLED=true
       - LERNSTORE_MODE=LEGACY
-      - ROCKETCHAT_SERVICE_ENABLED=true
-      - EDTR_SOURCE=https://cdn.jsdelivr.net/gh/schul-cloud/edtrio@e9d3bb9d66092bafa07846269c8fc6f9d5fb0559/dist/index.js
-      - LOG_LEVEL=debug
+      #- ROCKETCHAT_SERVICE_ENABLED=true
+      #- EDTR_SOURCE=https://cdn.jsdelivr.net/gh/schul-cloud/edtrio@e9d3bb9d66092bafa07846269c8fc6f9d5fb0559/dist/index.js
+      #- LOG_LEVEL=debug
     ports:
       - "3100:3100"
       - "9310:9310" #debug port
@@ -129,111 +114,28 @@ services:
     restart: unless-stopped
   ###
 
-
-  ### Schul-Cloud Calendar
-  ###
-  calendar-postgres:
-    image: postgres:9.5
-    ports:
-      - "5432:5432"
-    volumes:
-      - 'data-calendar-postgres:/var/lib/postgresql/data'
-      - 'postgres-init:/docker-entrypoint-initdb.d'
-    environment:
-      - POSTGRES_DB=schulcloud_calendar
-      - POSTGRES_USER=node
-      - POSTGRES_PASSWORD=genericpassword
-    restart: unless-stopped
-
-
-  calendar:
-    image: schulcloud/schulcloud-calendar
+  nuxt-client:
+    image: "schulcloud/schulcloud-nuxt-client:${NUXT_DOCKER_TAG}"
     build:
-      context: ../../schulcloud-calendar
-      dockerfile: Dockerfile.develop
-    ports:
-      - "3000"
+      context: ${NUXT_PATH:-/dev/null}
+      dockerfile: deploy/Dockerfile.client
     depends_on:
-      - calendar-postgres
-    volumes:
-      - 'postgres-init:/docker-entrypoint-initdb.d'
+      - server
+      - client
     environment:
       # ENV
-      - NODE_ENV=production
-      # DB Credentials
-      - DB_PASSWORD=genericpassword
-      - DB_HOST=calendar-postgres
-      - DB_USERNAME=node
-      - DB_DATABASE=schulcloud_calendar
-      # Paths
-      - SCHULCLOUD_BASE_PATH=http://server:3030
-      - NOTIFICATION_SERVICE_BASE_PATH=http://notification:3040
-      - SCHULCLOUD_ALL_USERS_FOR_UUID=http://server:3030/resolve/users/
-      - SCHULCLOUD_ALL_SCOPES_FOR_TOKEN=http://server:3030/resolve/scopes/
-      - NOTIFICATION_SERVICE_NEW_NOTIFICATION=http://notification:3040/messages
-    restart: unless-stopped
-    command: npm start
-
-  ###
-
-  ### Schul-Cloud Notifications
-  ###
-
-  notification-service:
-    image: schulcloud/node-notification-service:latest
-    build:
-      context: ../../node-notification-service
-      dockerfile: Dockerfile
-    container_name: notification-service
-    volumes:
-      - ../../node-notification-service:/usr/src/app
+      #- NODE_ENV=production
+      - TZ=Europe/Berlin
+      - LEGACY_CLIENT_URL=http://client:3100
+      - HOST=0.0.0.0
+      - API_URL=http://server:3030
+      # FEATURE TOGGLES
+      - FEATURE_TEAMS_ENABLED=true
+      - LERNSTORE_MODE=LEGACY
+      # Theme and Titles
+      - SC_THEME=default
     ports:
-      - 3031:3031
-    links:
-      - mongodb
-      - redis
-    environment:
-      - MONGO_HOST=mongodb
-      - REDIS_HOST=redis
-      #- NOTIFICATION_PORT=3031
-      # - NODE_ENV=production
-    depends_on:
-      - mongodb
-      - redis
-      - mail
-    command: sh -c "npm run build && npm run debug"
-
-  mail:
-    image: schickling/mailcatcher
-    ports:
-      - 1080:1080
-
-  ### Filepreview
-  ###
-  redis:
-    image: redis:latest
-    command: ["redis-server", "--appendonly", "yes"]
-    hostname: redis
-    restart: unless-stopped
-
-  filepreview:
-    image: schulcloud/filepreview:latest
-    build:
-      context: ../../filepreview
-      dockerfile: Dockerfile
-    volumes:
-      - ../../filepreview:/home/node/app
-    environment:
-      USERNAME: filepreview
-      PASSWORD: strongPassword
-      REDIS_HOST: redis
-    ports:
-      - "3000"
-    networks:
-      - default
-      - storage
-    depends_on:
-      - redis
+      - "4000:4000"
     restart: unless-stopped
 
   ###
@@ -246,7 +148,4 @@ networks:
 
 volumes:
   data-mongodb:
-  data-calendar-postgres:
-  data-s3-storage:
   db-data:
-  postgres-init:
