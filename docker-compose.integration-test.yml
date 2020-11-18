@@ -52,13 +52,14 @@ services:
       - IGNORE_DISCOVERABILITY=true
       # BRUTE FORCE PROTECTION
       - LOGIN_BLOCK_TIME=3
-      # FEATURE TOGGLES
-      - LERNSTORE_MODE=EDUSHARING
+      # Edu-Sharing
       - ES_DOMAIN=https://mv-repo.schul-cloud.org
       - ES_USER
       - ES_PASSWORD
       - SECRET_ES_MERLIN_USERNAME
       - SECRET_ES_MERLIN_PW
+      # FEATURE TOGGLES
+      - LERNSTORE_MODE=EDUSHARING
     ports:
       - "3030:3030"
       - "5959:5959"
