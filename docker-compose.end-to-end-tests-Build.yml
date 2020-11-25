@@ -40,6 +40,12 @@ services:
       # - AWS_ACCESS_KEY=
       # - AWS_SECRET_ACCESS_KEY=
       # URIs and Port
+      # Antivirus
+      - API_HOST=http://localhost:3030
+      - FILE_SECURITY_CHECK_SERVICE_URI=http://localhost:8081/scan/file
+      # - ENABLE_FILE_SECURITY_CHECK=true
+      # - FILE_SECURITY_SERVICE_USERNAME
+      # - FILE_SECURITY_SERVICE_PASSWORD
       - MONGO_URI=mongodb://server-mongodb:27017/schulcloud
       - DB_URL=mongodb://server-mongodb:27017/schulcloud
       - DATABASE__URL=mongodb://server-mongodb:27017/schulcloud
