@@ -11,7 +11,7 @@ services:
       - ${SERVER_PATH}:/schulcloud-server
     ports:
       - "5959:5959"
-    command: npm run debug:container
+    command: npm run debug-ts
 
   client:
     env_file:
@@ -39,7 +39,7 @@ services:
 
   #filepreview:
   #  volumes:
-  #    - ${FILE_PREVIEW_PATH:-/dev/null}:/home/node/app
+  #    - ${FILE_PREVIEW_PATH:-.keep_empty}:/home/node/app
 
   #notification-service:
   #  volumes:

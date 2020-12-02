@@ -39,7 +39,7 @@ services:
     image: schulcloud/schulcloud-server:${SERVER_DOCKER_TAG}
     container_name: schulcloud-server
     build:
-      context: ${SERVER_PATH:-/dev/null}
+      context: ${SERVER_PATH:-.keep_empty}
       dockerfile: Dockerfile
       cache_from:
         - schulcloud/schulcloud-server:latest
@@ -85,7 +85,7 @@ services:
   client:
     image: schulcloud/schulcloud-client:${CLIENT_DOCKER_TAG}
     build:
-      context: ${CLIENT_PATH:-/dev/null}
+      context: ${CLIENT_PATH:-.keep_empty}
       dockerfile: Dockerfile
     depends_on:
       - server
@@ -119,7 +119,7 @@ services:
   nuxtclient:
     image: "schulcloud/schulcloud-nuxt-client:${NUXT_DOCKER_TAG}"
     build:
-      context: ${NUXT_PATH:-/dev/null}
+      context: ${NUXT_PATH:-.keep_empty}
       dockerfile: deploy/Dockerfile.client
     depends_on:
       - server

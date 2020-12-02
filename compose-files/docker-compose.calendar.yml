@@ -31,7 +31,7 @@ services:
   calendar:
     image: schulcloud/schulcloud-calendar:${CALENDAR_DOCKER_TAG:-latest}
     build:
-      context: ${CALENDAR_PATH:-/dev/null}
+      context: ${CALENDAR_PATH:-.keep_empty}
       dockerfile: Dockerfile
     ports:
       - "3000"
