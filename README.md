@@ -10,15 +10,15 @@ The scripts (e.g. startup_develop.sh) set up an environment for developing with 
 
 ## Change version or path of container (env-files)
 
-Version of docker container that aren't managed by the HPI-Schul-Cloud team could be inlcuded and update in `./envs/default.env` other docker tags should be added to the relatet env file (e.g. for develop us `./envs/develop.env`). Some of the container have also a default tag if nothing is set in envs. **Envs for spezial need** could also be added in a `.env` file inside the `./envs` path and will not be commited. Please add credentials and secrets only in this file!
+Versions of docker containers that aren't managed by the HPI-Schul-Cloud team can be inlcuded and updated in `./envs/default.env`. Other docker tags should be added to the related env file (e.g. for develop us `./envs/develop.env`). Some of the containers also have a default tag if nothing is set in envs. **Envs for special needs** can also be added in a `.env` file inside the `./envs` path and will not be commited. Please add credentials and secrets only in this file!
 
 ## Structure
 
 **docker-compose** files are located in the `./compose-files` and base mostly on the `docker-compose.yml`, which starts the base setup of server, client and nuxt-client. Most of the others could change envs dependencies or links and set everything they need to run there services in combination wiht other containers (e.g. server).
-**env** files are localed in `./envs` and can be used in combination of the docker-compose files to set default values. Some of the container already have some default values if the env is not set. In some cases this is not used, because for the end-to-end tests they not allowed to set to trigger a pull. In **data** are files stored needed for the docker container (e.g. default setup data for the ldap server).
+**env** files are located in `./envs` and can be used in combination with the docker-compose files to set default values. Some of the containers already have some default values if the env is not set. In some cases this is not used, because for the end-to-end tests they not allowed to set to trigger a pull. In **data** files needed for the docker containers are stored (e.g. default setup data for the ldap server).
 
 ## Contribution
 
-If you want to add a new service, please create a new docker-compose file in `./compose-files`, if it is not relatied to some of the existing. If it is for a special case and not necassery for the day to day use, it should be not set `depend-on` to an other component to lower the performance impact.
+If you want to add a new service, please create a new docker-compose file in `./compose-files` if it is not related to some of the existing services. If it is for a special case and not necessary for the day to day use, it should not be set to `depend-on` another component to lower the performance impact.
 
-Add the file to `./startup_develop` so the developer can use it easily. If it is also need for other test, add it to the relating startup file (e.g. for end-to-end-tests use the `./startup_end-to-end-tests`file).
+Add the file to `./startup_develop` so developers can use it easily. If it is also needed for other test, add it to the related startup file (e.g. for end-to-end-tests use the `./startup_end-to-end-tests`file).
