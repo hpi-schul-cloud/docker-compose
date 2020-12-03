@@ -16,7 +16,8 @@ Versions of docker containers that aren't managed by the HPI-Schul-Cloud team ca
 
 **docker-compose** files are located in the `./compose-files` and base mostly on the `docker-compose.yml`, which starts the base setup of server, client and nuxt-client. Most of the others could change envs dependencies or links and set everything they need to run there services in combination wiht other containers (e.g. server).
 **env** files are located in `./envs` and can be used in combination with the docker-compose files to set default values. Some of the containers already have some default values if the env is not set. In some cases this is not used, because for the end-to-end tests they not allowed to set to trigger a pull. If you want to rebuild your local
-images or force a pull latest images, you have to execute `docker rmi <docker-image>:<tag>` (e.g. `docker rmi schulcloud/schulcloud-calendar:latest`)In **data** files needed for the docker containers are stored (e.g. default setup data for the ldap server).
+images or force a pull latest images, you have to execute `docker rmi <docker-image>:<tag>` (e.g. `docker rmi schulcloud/schulcloud-calendar:latest`)
+In **data** files needed for the docker containers are stored (e.g. default setup data for the ldap server).
 
 ## Contribution
 
