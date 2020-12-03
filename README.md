@@ -15,7 +15,7 @@ Versions of docker containers that aren't managed by the HPI-Schul-Cloud team ca
 ## Structure
 
 **docker-compose** files are located in the `./compose-files` and base mostly on the `docker-compose.yml`, which starts the base setup of server, client and nuxt-client. Most of the others could change envs dependencies or links and set everything they need to run there services in combination wiht other containers (e.g. server).
-**env** files are localed in `./envs` and can be used in combination of the docker-compose files to set default values. Some of the container already have some default values if the env is not set. In some cases this is not used, because for the end-to-end tests they not allowed to set to trigger a pull. In **data** are files stored needed for the docker container (e.g. default setup data for the ldap server).
+**env** files are located in `./envs` and can be used in combination with the docker-compose files to set default values. Some of the containers already have some default values if the env is not set. In some cases this is not used, because for the end-to-end tests they not allowed to set to trigger a pull. In **data** files needed for the docker containers are stored (e.g. default setup data for the ldap server).
 
 ## Contribution
 
