@@ -19,6 +19,6 @@ Versions of docker containers that aren't managed by the HPI-Schul-Cloud team ca
 
 ## Contribution
 
-If you want to add a new service, please create a new docker-compose file in `./compose-files`, if it is not relatied to some of the existing. If it is for a special case and not necassery for the day to day use, it should be not set `depend-on` to an other component to lower the performance impact.
+If you want to add a new service, please create a new docker-compose file in `./compose-files` if it is not related to some of the existing services. If it is for a special case and not necessary for the day to day use, it should not be set to `depend-on` another component to lower the performance impact.
 
 Add the file to `./startup_develop` so the developer can use it easily. If it is also need for other test, add it to the relating startup file (e.g. for end-to-end-tests use the `./startup_end-to-end-tests`file).
