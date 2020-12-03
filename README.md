@@ -10,7 +10,7 @@ The scripts (e.g. startup_develop.sh) set up an environment for developing with 
 
 ## Change version or path of container (env-files)
 
-Version of docker container that aren't managed by the HPI-Schul-Cloud team could be inlcuded and update in `./envs/default.env` other docker tags should be added to the relatet env file (e.g. for develop us `./envs/develop.env`). Some of the container have also a default tag if nothing is set in envs. **Envs for spezial need** could also be added in a `.env` file inside the `./envs` path and will not be commited. Please add credentials and secrets only in this file!
+Versions of docker containers that aren't managed by the HPI-Schul-Cloud team can be inlcuded and updated in `./envs/default.env`. Other docker tags should be added to the related env file (e.g. for develop us `./envs/develop.env`). Some of the containers also have a default tag if nothing is set in envs. **Envs for special needs** can also be added in a `.env` file inside the `./envs` path and will not be commited. Please add credentials and secrets only in this file!
 
 ## Structure
 
