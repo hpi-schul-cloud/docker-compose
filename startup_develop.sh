@@ -17,4 +17,4 @@ docker-compose \
 	-f ${COMPOSE_FILES_PATH}/docker-compose.file.yml \
 	-f ${COMPOSE_FILES_PATH}/docker-compose.superhero.yml \
 	-f ${COMPOSE_FILES_PATH}/docker-compose.dev.yml \
-	$@
+	${@:-up -d}
