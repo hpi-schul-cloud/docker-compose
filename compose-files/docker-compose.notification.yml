@@ -22,9 +22,10 @@ services:
     ports:
       - 3031:3031
     environment:
-      - NODE_ENV=development
+      - NODE_ENV=${NODE_ENV:-development}
       - MONGO_HOST=mongodb
       - REDIS_HOST=redis
+      - TESTPLATFORM=1
       #- NOTIFICATION_PORT=3031
     depends_on:
       - mongodb
