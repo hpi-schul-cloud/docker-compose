@@ -4,6 +4,9 @@ source ./envs/default.env
 source ./envs/develop.env
 [ -f ./envs/.env ] && source ./envs/.env
 
+[ -n "${FILE_PREVIEW_PATH}" ] || docker pull schulcloud/filepreview:${FILE_PREVIEW_DOCKER_TAG:-latest}
+[ -n "${NOTIFICATION_SERVICE_PATH}" ] || docker pull schulcloud/node-notification-service:${NOTIFICATION_SERVICE_DOCKER_TAG}
+[ -n "${CALENDAR_PATH}" ] || docker pull schulcloud/schulcloud-calendar:${CALENDAR_DOCKER_TAG:-latest}
 
 docker-compose \
 	--env-file ./env/develop.env \
