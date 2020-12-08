@@ -30,7 +30,7 @@ services:
     restart: unless-stopped
 
   redis:
-    image: redis:${REDIS_DOCKER_TAG:-alpine} ## change tag in version.env
+    image: redis:${REDIS_DOCKER_TAG:-latest} ## change tag in version.env
     command: ["redis-server", "--appendonly", "yes"]
     hostname: redis
     restart: unless-stopped
@@ -39,7 +39,7 @@ services:
     image: schulcloud/schulcloud-server:${SERVER_DOCKER_TAG}
     container_name: schulcloud-server
     build:
-      context: ${SERVER_PATH:-/dev/null}
+      context: ${SERVER_PATH:-.keep_empty}
       dockerfile: Dockerfile
       cache_from:
         - schulcloud/schulcloud-server:latest
@@ -48,7 +48,7 @@ services:
       - redis
     environment:
       # ENV
-      #- NODE_ENV=production
+      - NODE_ENV=${NODE_ENV:-development}
       - HOST=http://localhost:3030
       - SC_TITLE=HPI Schulcloud
       - SC_SHORT_TITLE=Schulcloud
@@ -62,12 +62,18 @@ services:
       # AUTH Secret
       # - AUTHENTICATION=
       - IGNORE_DISCOVERABILITY=true
+      # Brute force protection
+      - LOGIN_BLOCK_TIME=3
+      # Edu-Sharing
+      - ES_DOMAIN=https://mv-repo.schul-cloud.org
+      - ES_USER
+      - ES_PASSWORD
+      - SECRET_ES_MERLIN_USERNAME
+      - SECRET_ES_MERLIN_PW
       # FEATURE TOGGLES
-      - LERNSTORE_MODE=LEGACY
-      - LOG_LEVEL=debug
+      - LERNSTORE_MODE=EDUSHARING
     ports:
       - "3030:3030"
-      - "5959:5959"
     networks:
       - storage
       - default
@@ -79,14 +85,12 @@ services:
   client:
     image: schulcloud/schulcloud-client:${CLIENT_DOCKER_TAG}
     build:
-      context: ${CLIENT_PATH:-/dev/null}
+      context: ${CLIENT_PATH:-.keep_empty}
       dockerfile: Dockerfile
     depends_on:
       - server
     environment:
       # ENV
-      #- NODE_ENV=development
-      - DOCKER=true
       #- TZ=Europe/Berlin
       # Theme and Titles
       - SC_TITLE=HPI Schulcloud
@@ -100,38 +104,36 @@ services:
       - BACKEND_URL=http://server:3030
       - PUBLIC_BACKEND_URL=https://localhost:3030
       #- LIBRE_OFFICE_CLIENT_URL=http://localhost:9980
-      #- ROCKET_CHAT_URI=https://chat.schulcloud.local
       # FEATURE TOGGLES
       - FEATURE_TEAMS_ENABLED=true
-      - LERNSTORE_MODE=LEGACY
-      #- ROCKETCHAT_SERVICE_ENABLED=true
+      - FEATURE_EXTENSIONS_ENABLED=true
+      - LERNSTORE_MODE=EDUSHARING
       #- EDTR_SOURCE=https://cdn.jsdelivr.net/gh/schul-cloud/edtrio@e9d3bb9d66092bafa07846269c8fc6f9d5fb0559/dist/index.js
-      #- LOG_LEVEL=debug
+      # BRUTE FORCE PROTECTION
+      - LOGIN_BLOCK_TIME=3
     ports:
       - "3100:3100"
-      - "9310:9310" #debug port
-      - "7000:7000"
     restart: unless-stopped
   ###
 
-  nuxt-client:
+  nuxtclient:
     image: "schulcloud/schulcloud-nuxt-client:${NUXT_DOCKER_TAG}"
     build:
-      context: ${NUXT_PATH:-/dev/null}
+      context: ${NUXT_PATH:-.keep_empty}
       dockerfile: deploy/Dockerfile.client
     depends_on:
       - server
       - client
     environment:
       # ENV
-      #- NODE_ENV=production
+      - NODE_ENV=${NODE_ENV:-development}
       - TZ=Europe/Berlin
       - LEGACY_CLIENT_URL=http://client:3100
       - HOST=0.0.0.0
       - API_URL=http://server:3030
       # FEATURE TOGGLES
       - FEATURE_TEAMS_ENABLED=true
-      - LERNSTORE_MODE=LEGACY
+      - LERNSTORE_MODE=EDUSHARING
       # Theme and Titles
       - SC_THEME=default
     ports:

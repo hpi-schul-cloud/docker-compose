@@ -2,7 +2,10 @@ version: "3.2"
 
 services:
 
-
+#########
+### was used for new editor service as an api gateway
+### was only used for tests and local development
+#########
 
   ### kong api gateway
   kong-database:
