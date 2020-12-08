@@ -7,6 +7,8 @@ services:
       - filepreview
     environment:
       - AWS_ENDPOINT_URL=https://dev-storage.schul-cloud.org:9001
+      - AWS_ACCESS_KEY=${AWS_ACCESS_KEY}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
       ## store AWS credentials in a .env file and do not push them
       # file preview service
       - ENABLE_THUMBNAIL_GENERATION=true
