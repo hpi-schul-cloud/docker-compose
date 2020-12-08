@@ -26,6 +26,15 @@ services:
       - "7000:7000" #browser reload
     command: bash -c "gulp & gulp watch-reload"
 
+  client-init:
+    image: schulcloud/schulcloud-client:${CLIENT_DOCKER_TAG}
+    build:
+      context: ${CLIENT_PATH:-.keep_empty}
+      dockerfile: Dockerfile
+    volumes:
+      - ${CLIENT_PATH}:/home/node/app
+    command: /bin/sh -c 'npm install && npm rebuild node-sass && gulp'
+
   nuxtclient:
     env_file:
         - ../envs/develop.env
