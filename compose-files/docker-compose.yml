@@ -156,7 +156,7 @@ services:
     image: "schulcloud/schulcloud-nuxt-client:${NUXT_DOCKER_TAG}"
     build:
       context: ${NUXT_PATH:-.keep_empty}
-      dockerfile: deploy/Dockerfile.client
+      dockerfile: Dockerfile.client
     depends_on:
       - server
       - client
