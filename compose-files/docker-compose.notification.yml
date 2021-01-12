@@ -1,0 +1,38 @@
+version: "3.2"
+
+services:
+
+  server:
+    depends_on:
+      - notification-service
+    environment:
+      - NOTIFICATION_PLATFORM=testplatform
+      - NOTIFICATION_URI=http://notification-service:3031
+      - FORCE_SEND_EMAIL=true
+
+  ###
+  ### Schul-Cloud Notifications
+  ###
+  notification-service:
+    image: schulcloud/node-notification-service:${NOTIFICATION_SERVICE_DOCKER_TAG}
+    build:
+      context: ${NOTIFICATION_SERVICE_PATH:-.keep_empty}
+      dockerfile: Dockerfile
+    container_name: notification-service
+    ports:
+      - 3031:3031
+    environment:
+      - NODE_ENV=${NODE_ENV:-development}
+      - MONGO_HOST=mongodb
+      - REDIS_HOST=redis
+      - TESTPLATFORM=1
+      #- NOTIFICATION_PORT=3031
+    depends_on:
+      - mongodb
+      - redis
+      - mail
+
+  mail:
+    image: schickling/mailcatcher
+    ports:
+      - 1080:1080

@@ -1,0 +1,46 @@
+version: "3.2"
+
+services:
+
+  server:
+    env_file:
+      - ../envs/develop.env
+    environment:
+      - LOG_LEVEL=debug
+    volumes:
+      - ${SERVER_PATH}:/schulcloud-server
+    ports:
+      - "5959:5959"
+    command: npm run debug-ts
+
+  client:
+    env_file:
+      - ../envs/develop.env
+    environment:
+      - LOG_LEVEL=debug
+    volumes:
+      - ${CLIENT_PATH}:/home/node/app
+      - /home/node/app/build
+    ports:
+      - "9310:9310" #debug port
+      - "7000:7000" #browser reload
+    command: bash -c "gulp & gulp watch-reload"
+
+  nuxtclient:
+    env_file:
+        - ../envs/develop.env
+    volumes:
+      - ${NUXT_PATH}:/app
+    command: npm run dev:nuxt
+
+  #notification-service:
+  #  volumes:
+  #    - ../../node-notification-service:/usr/src/app
+
+  #filepreview:
+  #  volumes:
+  #    - ${FILE_PREVIEW_PATH:-.keep_empty}:/home/node/app
+
+  #notification-service:
+  #  volumes:
+  #    - ../../node-notification-service:/usr/src/app

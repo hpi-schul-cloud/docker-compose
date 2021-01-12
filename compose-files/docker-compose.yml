@@ -1,0 +1,153 @@
+version: "3.2"
+
+services:
+
+
+  ### nginx
+  #nginx:
+  #  image: nginx
+  #  depends_on:
+  #   - s3-storage
+  #  volumes:
+  #    - ../nginx:/etc/nginx/:ro
+  #  ports:
+  #    - 8081:80
+  #  networks:
+  #    - storage
+  #    - default
+
+  ###
+
+  ### Schul-Cloud Server
+  ###
+  mongodb:
+    image: mongo:${MONGO_DOCKER_TAG:-latest} ## change tag in version.env
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - data-mongodb:/data/db
+    restart: unless-stopped
+
+  redis:
+    image: redis:${REDIS_DOCKER_TAG:-latest} ## change tag in version.env
+    command: ["redis-server", "--appendonly", "yes"]
+    hostname: redis
+    restart: unless-stopped
+
+  server:
+    image: schulcloud/schulcloud-server:${SERVER_DOCKER_TAG}
+    container_name: schulcloud-server
+    build:
+      context: ${SERVER_PATH:-.keep_empty}
+      dockerfile: Dockerfile
+      cache_from:
+        - schulcloud/schulcloud-server:latest
+    depends_on:
+      - mongodb
+      - redis
+    environment:
+      # ENV
+      - NODE_ENV=${NODE_ENV:-development}
+      - HOST=http://localhost:3030
+      - SC_TITLE=HPI Schulcloud
+      - SC_SHORT_TITLE=Schulcloud
+      # URIs and Port
+      - MONGO_URI=mongodb://mongodb:27017/schulcloud
+      - DB_URL=mongodb://mongodb:27017/schulcloud
+      - DATABASE__URL=mongodb://server-mongodb:27017/schulcloud
+      - REDIS_URI=redis://redis:6379
+      - CONTENT_URI=https://consent.schul-cloud.org #lernstore
+      - PORT=3030
+      # AUTH Secret
+      # - AUTHENTICATION=
+      - IGNORE_DISCOVERABILITY=true
+      # Brute force protection
+      - LOGIN_BLOCK_TIME=3
+      # Edu-Sharing
+      - ES_DOMAIN=https://mv-repo.schul-cloud.org
+      - ES_USER
+      - ES_PASSWORD
+      - SECRET_ES_MERLIN_USERNAME
+      - SECRET_ES_MERLIN_PW
+      # FEATURE TOGGLES
+      - LERNSTORE_MODE=EDUSHARING
+    ports:
+      - "3030:3030"
+    networks:
+      - storage
+      - default
+    restart: unless-stopped
+
+  ###
+  ### Schul-Cloud Client
+  ###
+  client:
+    image: schulcloud/schulcloud-client:${CLIENT_DOCKER_TAG}
+    build:
+      context: ${CLIENT_PATH:-.keep_empty}
+      dockerfile: Dockerfile
+    depends_on:
+      - server
+    environment:
+      # ENV
+      #- TZ=Europe/Berlin
+      # Theme and Titles
+      - SC_TITLE=HPI Schulcloud
+      - SC_SHORT_TITLE=Schulcloud
+      - SC_PRODUCTNAME=Hauptschule
+      - SC_FEDERALSTATE=mainstate
+      # Google
+      #- GOOGLE_ANALYTICS_TRACKING_ID="UA-155982548-1"
+      # URIs
+      - HOST=http://localhost:3100
+      - BACKEND_URL=http://server:3030
+      - PUBLIC_BACKEND_URL=https://localhost:3030
+      #- LIBRE_OFFICE_CLIENT_URL=http://localhost:9980
+      # FEATURE TOGGLES
+      - FEATURE_TEAMS_ENABLED=true
+      - FEATURE_EXTENSIONS_ENABLED=true
+      - LERNSTORE_MODE=EDUSHARING
+      #- EDTR_SOURCE=https://cdn.jsdelivr.net/gh/schul-cloud/edtrio@e9d3bb9d66092bafa07846269c8fc6f9d5fb0559/dist/index.js
+      # BRUTE FORCE PROTECTION
+      - LOGIN_BLOCK_TIME=3
+    ports:
+      - "3100:3100"
+    restart: unless-stopped
+  ###
+
+  nuxtclient:
+    image: "schulcloud/schulcloud-nuxt-client:${NUXT_DOCKER_TAG}"
+    build:
+      context: ${NUXT_PATH:-.keep_empty}
+      dockerfile: deploy/Dockerfile.client
+    depends_on:
+      - server
+      - client
+    environment:
+      # ENV
+      - NODE_ENV=${NODE_ENV:-development}
+      - TZ=Europe/Berlin
+      - LEGACY_CLIENT_URL=http://client:3100
+      - HOST=0.0.0.0
+      - API_URL=http://server:3030
+      # FEATURE TOGGLES
+      - FEATURE_TEAMS_ENABLED=true
+      - LERNSTORE_MODE=EDUSHARING
+      # Theme and Titles
+      - SC_THEME=default
+    ports:
+      - "4000:4000"
+    restart: unless-stopped
+
+  ###
+networks:
+  storage:
+    ipam:
+      driver: default
+      config:
+        - subnet: "172.16.13.0/24"
+
+volumes:
+  data-mongodb:
+  db-data:

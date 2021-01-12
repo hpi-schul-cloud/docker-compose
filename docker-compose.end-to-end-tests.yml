@@ -161,6 +161,7 @@ services:
     environment:
       - MONGO_HOST=server-mongodb
       - REDIS_HOST=redis
+      - TESTPLATFORM=1
     volumes:
       - ../end-to-end-tests/ci/config/notification-service/testplatform.config.json:/usr/src/app/platforms/testplatform/config.json
       - ./logs:/usr/src/app/logs

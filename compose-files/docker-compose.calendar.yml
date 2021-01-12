@@ -1,0 +1,59 @@
+version: "3.2"
+
+services:
+
+  server:
+    depends_on:
+      - calendar
+    environment:
+      - CALENDAR_URI=http://calendar:3000
+
+  client:
+    environment:
+      - CALENDAR_SERVICE_ENABLED=true
+
+  ### Schul-Cloud Calendar
+  ###
+  calendar-postgres:
+    image: postgres:${POSTGRES_DOCKER_TAG:-latest}
+    ports:
+      - "5432:5432"
+    volumes:
+      - 'data-calendar-postgres:/var/lib/postgresql/data'
+      - 'postgres-init:/docker-entrypoint-initdb.d'
+    environment:
+      - POSTGRES_DB=schulcloud_calendar
+      - POSTGRES_USER=node
+      - POSTGRES_PASSWORD=genericpassword
+    restart: unless-stopped
+
+
+  calendar:
+    image: schulcloud/schulcloud-calendar:${CALENDAR_DOCKER_TAG:-latest}
+    build:
+      context: ${CALENDAR_PATH:-.keep_empty}
+      dockerfile: Dockerfile
+    ports:
+      - "3000"
+    depends_on:
+      - calendar-postgres
+    volumes:
+      - 'postgres-init:/docker-entrypoint-initdb.d'
+    environment:
+      # ENV
+      - NODE_ENV=production
+      # DB Credentials
+      - DB_PASSWORD=genericpassword
+      - DB_HOST=calendar-postgres
+      - DB_USERNAME=node
+      - DB_DATABASE=schulcloud_calendar
+      # Paths
+      - SCHULCLOUD_BASE_PATH=http://server:3030
+      - NOTIFICATION_SERVICE_BASE_PATH=http://notification-service:3040
+      - NOTIFICATION_SERVICE_NEW_NOTIFICATION=http://notification-service:3040/messages
+    restart: unless-stopped
+    command: npm start
+
+volumes:
+  data-calendar-postgres:
+  postgres-init:
