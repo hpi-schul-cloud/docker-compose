@@ -11,4 +11,5 @@ Allowed Types of change: `Added`, `Changed`, `Deprecated`, `Removed`, `Fixed`, `
 
 ### Changed
 
+- SC-8356 - add docker login helper
 - IMP-160 - Changed repository name for end-to-end tests
