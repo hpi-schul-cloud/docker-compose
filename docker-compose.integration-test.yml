@@ -165,7 +165,7 @@ services:
     ports:
       - 3031:3031
     environment:
-      - MONGO_HOST=server-mongodb
+      - MONGO_HOST=server-mongodb/notification-service
       - REDIS_HOST=redis
       - TESTPLATFORM=1
     volumes:
