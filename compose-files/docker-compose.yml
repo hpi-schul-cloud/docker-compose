@@ -22,12 +22,49 @@ services:
   ###
   mongodb:
     image: mongo:${MONGO_DOCKER_TAG:-latest} ## change tag in version.env
-    container_name: mongodb
+    container_name: mongodb-primary
     ports:
       - "27017:27017"
     volumes:
-      - data-mongodb:/data/db
+      - data-mongodb-primary:/data/db
+    depends_on:
+      - mongodb-secondary
+      - mongodb-arbiter
     restart: unless-stopped
+    command: --bind_ip_all --replSet rs0 --enableMajorityReadConcern false
+
+  mongodb-secondary:
+    image: mongo:${MONGO_DOCKER_TAG:-latest} ## change tag in version.env
+    container_name: mongodb-secondary
+    ports:
+      - "27017"
+      - "27018:27017"
+    volumes:
+      - data-mongodb-secondary:/data/db
+    restart: unless-stopped
+    command: --bind_ip_all --replSet rs0 --enableMajorityReadConcern false
+
+  mongodb-arbiter:
+    image: mongo:${MONGO_DOCKER_TAG:-latest} ## change tag in version.env
+    container_name: mongodb-arbiter
+    ports:
+      - "27017"
+      - "27019:27017"
+    volumes:
+      - data-mongodb-arbiter:/data/db
+    restart: unless-stopped
+    command: --bind_ip_all --replSet rs0 --enableMajorityReadConcern false
+
+  mongosetup:
+    image: mongo:${MONGO_DOCKER_TAG:-latest}
+    depends_on:
+      - mongodb
+      - mongodb-secondary
+      - mongodb-arbiter
+    volumes:
+      - ../scripts/mongo_setup.sh:/scripts/mongo_setup.sh
+    restart: "no"
+    entrypoint: [ "bash", "/scripts/mongo_setup.sh" ]
 
   redis:
     image: redis:${REDIS_DOCKER_TAG:-latest} ## change tag in version.env
@@ -53,8 +90,7 @@ services:
       - SC_TITLE=HPI Schulcloud
       - SC_SHORT_TITLE=Schulcloud
       # URIs and Port
-      - MONGO_URI=mongodb://mongodb:27017/schulcloud
-      - DB_URL=mongodb://mongodb:27017/schulcloud
+      - DB_URL=mongodb://mongodb:27017,mongodb-secondary:27017,mongodb-arbiter:27017/schulcloud?replicaSet=rs0&tls=false&readPreference=secondary
       - DATABASE__URL=mongodb://server-mongodb:27017/schulcloud
       - REDIS_URI=redis://redis:6379
       - CONTENT_URI=https://consent.schul-cloud.org #lernstore
@@ -149,5 +185,7 @@ networks:
         - subnet: "172.16.13.0/24"
 
 volumes:
-  data-mongodb:
+  data-mongodb-primary:
+  data-mongodb-secondary:
+  data-mongodb-arbiter:
   db-data:
