@@ -6,10 +6,11 @@ source ./envs/end-to-end-tests.env
 
 
 docker-compose \
-	--env-file ./env/end-to-end-tests.env \
+	--env-file ./envs/end-to-end-tests.env \
 	-f ${COMPOSE_FILES_PATH}/docker-compose.yml \
 	-f ${COMPOSE_FILES_PATH}/docker-compose.notification.yml \
 	-f ${COMPOSE_FILES_PATH}/docker-compose.file.yml \
+	-f ${COMPOSE_FILES_PATH}/docker-compose.calendar.yml \
 	-f ${COMPOSE_FILES_PATH}/docker-compose.end-to-end-tests.yml \
 	${@:-up -d}
 

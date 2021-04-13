@@ -28,8 +28,6 @@ services:
       REDIS_HOST: redis
     ports:
       - "3000"
-    networks:
-      - default
     depends_on:
       - redis
     restart: unless-stopped

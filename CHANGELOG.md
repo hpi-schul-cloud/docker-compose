@@ -9,6 +9,8 @@ Allowed Types of change: `Added`, `Changed`, `Deprecated`, `Removed`, `Fixed`, `
 
 ## [Unreleased]
 
+## [25.6.0] - 09-02-21
+
 ### Changed
 
 - SC-8356 - add docker login helper
