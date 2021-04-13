@@ -1,4 +1,4 @@
-version: "3.2"
+version: "3.7"
 
 services:
 
@@ -7,6 +7,7 @@ services:
       - calendar
     environment:
       - CALENDAR_URI=http://calendar:3000
+      - CALENDAR_API_KEY=test123
 
   client:
     environment:
@@ -16,6 +17,8 @@ services:
   ###
   calendar-postgres:
     image: postgres:${POSTGRES_DOCKER_TAG:-latest}
+    depends_on:
+      - calendar-init
     ports:
       - "5432:5432"
     volumes:
@@ -26,20 +29,20 @@ services:
       - POSTGRES_USER=node
       - POSTGRES_PASSWORD=genericpassword
     restart: unless-stopped
+    #command: ls /docker-entrypoint-initdb.d
 
 
   calendar:
-    image: schulcloud/schulcloud-calendar:${CALENDAR_DOCKER_TAG:-latest}
+    image: schulcloud/schulcloud-calendar:${CALENDAR_DOCKER_TAG:-develop_latest}
     build:
       context: ${CALENDAR_PATH:-.keep_empty}
       dockerfile: Dockerfile
     ports:
-      - "3000"
+      - "3000:3000"
     depends_on:
       - calendar-postgres
-    volumes:
-      - 'postgres-init:/docker-entrypoint-initdb.d'
     environment:
+      - API_KEY=test123
       # ENV
       - NODE_ENV=production
       # DB Credentials
@@ -53,6 +56,16 @@ services:
       - NOTIFICATION_SERVICE_NEW_NOTIFICATION=http://notification-service:3040/messages
     restart: unless-stopped
     command: npm start
+
+  calendar-init:
+    image: schulcloud/schulcloud-calendar:${CALENDAR_DOCKER_TAG:-latest}
+    build:
+      context: ${CALENDAR_PATH:-.keep_empty}
+      dockerfile: Dockerfile
+    init: true
+    volumes:
+      - 'postgres-init:/docker-entrypoint-initdb.d'
+    command: /bin/sh -c 'mv schema.sql /docker-entrypoint-initdb.d/01-schema.sql && mv example_data.sql /docker-entrypoint-initdb.d/02-data.sql'
 
 volumes:
   data-calendar-postgres:
