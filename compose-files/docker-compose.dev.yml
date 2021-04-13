@@ -11,7 +11,7 @@ services:
       - ${SERVER_PATH}:/schulcloud-server
     ports:
       - "5959:5959"
-    command: npm run debug-ts
+    command: npm run debug-ts:container
 
   client:
     env_file:
@@ -24,14 +24,14 @@ services:
     ports:
       - "9310:9310" #debug port
       - "7000:7000" #browser reload
-    command: bash -c "gulp & gulp watch-reload"
+    command: bash -c "gulp & npm rebuild node-sass & gulp watch-reload"
 
   nuxtclient:
     env_file:
         - ../envs/develop.env
     volumes:
       - ${NUXT_PATH}:/app
-    command: npm run dev:nuxt
+    command: bash -c "npm rebuild node-sass & npm run dev:nuxt"
 
   #notification-service:
   #  volumes:
