@@ -172,6 +172,14 @@ services:
       - LERNSTORE_MODE=EDUSHARING
       # Theme and Titles
       - SC_THEME=default
+      # Matrix messanger
+      - FEATURE_MATRIX_MESSENGER_ENABLED=true
+      - MATRIX_MESSENGER__DISCOVER_URI=https://staging.messenger.schule
+      - MATRIX_MESSENGER__EMBED_URI=https://embed.staging.messenger.schule
+      - MATRIX_MESSENGER__SCHOOL_ROOM_ENABLED=false
+      - MATRIX_MESSENGER__SCHOOL_SETTINGS_VISIBLE=true
+      - MATRIX_MESSENGER__STUDENT_ROOM_CREATION=false
+      - MATRIX_MESSENGER__URI=https://matrix.staging.messenger.schule
     ports:
       - "4000:4000"
     restart: unless-stopped
