@@ -9,6 +9,9 @@ Allowed Types of change: `Added`, `Changed`, `Deprecated`, `Removed`, `Fixed`, `
 
 ## [Unreleased]
 
+### Fixed
+- typo in the startup_develop.sh
+
 ## [25.6.0] - 09-02-21
 
 ### Changed

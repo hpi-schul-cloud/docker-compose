@@ -9,7 +9,7 @@ source ./envs/develop.env
 [ -n "${CALENDAR_PATH}" ] || docker pull schulcloud/schulcloud-calendar:${CALENDAR_DOCKER_TAG:-latest}
 
 docker-compose \
-	--env-file ./env/develop.env \
+	--env-file ./envs/develop.env \
 	-f ${COMPOSE_FILES_PATH}/docker-compose.yml \
 	-f ${COMPOSE_FILES_PATH}/docker-compose.ldap.yml \
 	-f ${COMPOSE_FILES_PATH}/docker-compose.calendar.yml \
