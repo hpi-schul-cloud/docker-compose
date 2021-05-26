@@ -2,12 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 Allowed Types of change: `Added`, `Changed`, `Deprecated`, `Removed`, `Fixed`, `Security`
 
-## [Unreleased]
+## [25.6.1] - 09-03-21
+
+### Fixed
+
+- SC-8772 - update extend of mongodb connection for node-notification-service
+
 
 ### Fixed
 - typo in the startup_develop.sh
@@ -15,6 +18,8 @@ Allowed Types of change: `Added`, `Changed`, `Deprecated`, `Removed`, `Fixed`, `
 ## [25.6.0] - 09-02-21
 
 ### Changed
+- [2020-10-30] IMP-160 - Changed repository name for end-to-end tests
+- [2020-11-04] Fixed path for volume in fallback compose file
 
 - SC-8356 - add docker login helper
 - IMP-160 - Changed repository name for end-to-end tests
