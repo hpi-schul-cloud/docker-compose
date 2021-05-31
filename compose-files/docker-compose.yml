@@ -102,10 +102,10 @@ services:
       - LOGIN_BLOCK_TIME=3
       # Edu-Sharing
       - ES_DOMAIN=https://mv-repo.schul-cloud.org
-      - ES_USER
-      - ES_PASSWORD
-      - SECRET_ES_MERLIN_USERNAME
-      - SECRET_ES_MERLIN_PW
+      - ES_USER={ES_USER}
+      - ES_PASSWORD={ES_PASSWORD}
+      - SECRET_ES_MERLIN_USERNAME={SECRET_ES_MERLIN_USERNAME}
+      - SECRET_ES_MERLIN_PW={SECRET_ES_MERLIN_PW}
       # FEATURE TOGGLES
       - LERNSTORE_MODE=EDUSHARING
     ports:

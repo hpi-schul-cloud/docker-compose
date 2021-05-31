@@ -5,13 +5,18 @@ services:
   ### Schul-Cloud Superhero Dashboard
   ###
   superhero-dashboard:
-    image: schulcloud/superhero-dashboard
+    image: schulcloud/superhero-dashboard:${SUPERHERO_DOCKER_TAG}
+    build:
+      context: ${SUPERHERO_PATH:-.keep_empty}
+      dockerfile: Dockerfile
     environment:
       BACKEND_URL: http://server:3030/
       SC_NAV_TITLE: Niedersächsische Bildungscloud
+      SC_THEME: default
       HOST: http://localhost:3033
     depends_on:
       - server
     ports:
       - 3033:3033
+    #command: sh -c "npm install nodemon & npm run debug"
     restart: unless-stopped

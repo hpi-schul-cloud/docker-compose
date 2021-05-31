@@ -5,12 +5,18 @@ All notable changes to this project will be documented in this file.
 
 Allowed Types of change: `Added`, `Changed`, `Deprecated`, `Removed`, `Fixed`, `Security`
 
+## [26.2.0] - 31-05-21
+
+
 ## [25.6.1] - 09-03-21
 
 ### Fixed
 
 - SC-8772 - update extend of mongodb connection for node-notification-service
 
+
+### Fixed
+- typo in the startup_develop.sh
 
 ## [25.6.0] - 09-02-21
 
