@@ -79,7 +79,7 @@ services:
       - "15672:15672"
 
   server:
-    #image: schulcloud/schulcloud-server:${SERVER_DOCKER_TAG}
+    image: ghcr.io/hpi-schul-cloud/schulcloud-server:${SERVER_DOCKER_TAG}
     container_name: schulcloud-server
     build:
       context: ${SERVER_PATH}
@@ -125,7 +125,7 @@ services:
   ### Schul-Cloud Client
   ###
   client:
-    #image: schulcloud/schulcloud-client:${CLIENT_DOCKER_TAG}
+    image: ghcr.io/hpi-schul-cloud/schulcloud-client-default:${CLIENT_DOCKER_TAG}
     build:
       context: ${CLIENT_PATH}
       dockerfile: Dockerfile
@@ -159,7 +159,7 @@ services:
   ###
 
   nuxtclient:
-    #image: "schulcloud/schulcloud-nuxt-client:${NUXT_DOCKER_TAG}"
+    image: ghcr.io/hpi-schul-cloud/nuxt-client-default:${NUXT_DOCKER_TAG}
     build:
       context: ${NUXT_PATH}
       dockerfile: Dockerfile.client
