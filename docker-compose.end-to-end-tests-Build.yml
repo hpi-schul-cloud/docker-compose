@@ -18,12 +18,19 @@ services:
       - data-server-mongodb:/data/db
     restart: unless-stopped
 
+  rabbitmq:
+    image: rabbitmq:3
+    ports:
+      - 5672:5672
+    restart: unless-stopped
+
   server:
     build:
       context: ../schulcloud-server
       dockerfile: Dockerfile
     depends_on:
       - server-mongodb
+      - rabbitmq
     environment:
       # ENV
       - NODE_ENV=production
@@ -43,6 +50,7 @@ services:
       - MONGO_URI=mongodb://server-mongodb:27017/schulcloud
       - DB_URL=mongodb://server-mongodb:27017/schulcloud
       - DATABASE__URL=mongodb://server-mongodb:27017/schulcloud
+      - RABBITMQ_URI=amqp://guest:guest@rabbitmq:5672
       - PORT=3030
       - CONTENT_URI=https://content.schul-cloud.org
       # RocketChat
