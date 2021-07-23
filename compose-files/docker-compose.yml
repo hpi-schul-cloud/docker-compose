@@ -99,6 +99,7 @@ services:
       - DB_URL=mongodb://mongodb:27017,mongodb-secondary:27017,mongodb-arbiter:27017/schulcloud?replicaSet=rs0&tls=false&readPreference=secondary
       - DATABASE__URL=mongodb://server-mongodb:27017/schulcloud
       - REDIS_URI=redis://redis:6379
+      - RABBITMQ_URI=amqp://guest:guest@rabbit:5672
       - CONTENT_URI=https://consent.schul-cloud.org #lernstore
       - PORT=3030
       # AUTH Secret
