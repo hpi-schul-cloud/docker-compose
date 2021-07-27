@@ -77,20 +77,23 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
-  
-  maildrop:
-    image: ghcr.io/kaffeekrone/mail-drop:1.0
-    environment:
-      - SPRING_MAIL_HOST=mailcatcher
-      - SPRING_MAIL_PORT=1025
-      - SPRING_MAIL_USERNAME=guest
-      - SPRING_RABBITMQ_HOST=rabbit
-
+      
   mailcatcher:
     image: schickling/mailcatcher
     ports:
       - 1080:1080
       - 1025:1025
+          
+  maildrop:
+    image: ghcr.io/kaffeekrone/mail-drop:1.0
+    depends_on: 
+      - mailcatcher
+      - rabbit
+    environment:
+      - SPRING_MAIL_HOST=mailcatcher
+      - SPRING_MAIL_PORT=1025
+      - SPRING_MAIL_USERNAME=guest
+      - SPRING_RABBITMQ_HOST=rabbit
 
   server:
     image: ghcr.io/hpi-schul-cloud/schulcloud-server:${SERVER_DOCKER_TAG}
