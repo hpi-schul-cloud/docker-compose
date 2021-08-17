@@ -9,7 +9,7 @@ docker-compose \
 	--env-file ./envs/end-to-end-tests.env \
 	-f ${COMPOSE_FILES_PATH}/docker-compose.yml \
 	-f ${COMPOSE_FILES_PATH}/docker-compose.end-to-end-tests.yml \
-	up
+	${@:-up}
 
 
 #	-f ./compose-files/docker-compose.calendar.yml \
