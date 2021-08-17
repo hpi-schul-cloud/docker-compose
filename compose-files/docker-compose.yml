@@ -80,6 +80,24 @@ services:
       - "5672:5672"
       - "15672:15672"
       
+  ### Schul-Cloud Calendar
+  ###
+  calendar-postgres:
+    image: postgres:${POSTGRES_DOCKER_TAG:-latest}
+    depends_on:
+      - calendar-init
+    ports:
+      - "5432:5432"
+    volumes:
+      - 'data-calendar-postgres:/var/lib/postgresql/data'
+      - 'postgres-init:/docker-entrypoint-initdb.d'
+    environment:
+      - POSTGRES_DB=schulcloud_calendar
+      - POSTGRES_USER=node
+      - POSTGRES_PASSWORD=genericpassword
+    restart: unless-stopped
+    #command: ls /docker-entrypoint-initdb.d
+      
   mailcatcher:
     image: schickling/mailcatcher
     ports:
@@ -109,6 +127,7 @@ services:
       - mongosetup
       - redis
       - rabbit
+      - calendar
     environment:
       # ENV
       - NODE_ENV=${NODE_ENV:-development}
@@ -135,6 +154,8 @@ services:
       - SECRET_ES_MERLIN_PW={SECRET_ES_MERLIN_PW}
       # FEATURE TOGGLES
       - LERNSTORE_MODE=EDUSHARING
+      - CALENDAR_URI=http://calendar:3000
+      - CALENDAR_API_KEY=test123
     ports:
       - "3030:3030"
     networks:
@@ -162,6 +183,7 @@ services:
       - SC_PRODUCTNAME=Hauptschule
       - SC_FEDERALSTATE=mainstate
       - DOCKER=true
+      - CALENDAR_SERVICE_ENABLED=true
       # Google
       #- GOOGLE_ANALYTICS_TRACKING_ID="UA-155982548-1"
       # URIs
@@ -204,6 +226,56 @@ services:
     ports:
       - "4000:4000"
     restart: unless-stopped
+    
+  calendar:
+    image: schulcloud/schulcloud-calendar:${CALENDAR_DOCKER_TAG:-develop_latest}
+    build:
+      context: ${CALENDAR_PATH:-.keep_empty}
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - calendar-postgres
+    environment:
+      - API_KEY=test123
+      # ENV
+      - NODE_ENV=production
+      # DB Credentials
+      - DB_PASSWORD=genericpassword
+      - DB_HOST=calendar-postgres
+      - DB_USERNAME=node
+      - DB_DATABASE=schulcloud_calendar
+      # Paths
+      - SCHULCLOUD_BASE_PATH=http://server:3030
+      - NOTIFICATION_SERVICE_BASE_PATH=http://notification-service:3040
+      - NOTIFICATION_SERVICE_NEW_NOTIFICATION=http://notification-service:3040/messages
+    restart: unless-stopped
+    command: npm start
+
+  calendar-init:
+    image: schulcloud/schulcloud-calendar:${CALENDAR_DOCKER_TAG:-latest}
+    build:
+      context: ${CALENDAR_PATH:-.keep_empty}
+      dockerfile: Dockerfile
+    init: true
+    volumes:
+      - 'postgres-init:/docker-entrypoint-initdb.d'
+    command: /bin/sh -c 'mv schema.sql /docker-entrypoint-initdb.d/01-schema.sql && mv example_data.sql /docker-entrypoint-initdb.d/02-data.sql'
+    
+  selenium-hub:
+    image: selenium/hub:3.141.59-titanium
+    container_name: selenium-hub
+    ports:
+      - "4444:4444"
+  chrome:
+    image: selenium/node-chrome:3.141.59-titanium
+    volumes:
+      - /dev/shm:/dev/shm
+    depends_on:
+      - selenium-hub
+    environment:
+      - HUB_HOST=selenium-hub
+      - HUB_PORT=4444
 
   ###
 networks:
@@ -217,4 +289,6 @@ volumes:
   data-mongodb-primary:
   data-mongodb-secondary:
   data-mongodb-arbiter:
+  data-calendar-postgres:
+  postgres-init:
   db-data:
