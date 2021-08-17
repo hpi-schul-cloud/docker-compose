@@ -68,12 +68,14 @@ services:
 
   redis:
     image: redis:${REDIS_DOCKER_TAG:-latest} ## change tag in version.env
+    container_name: redis
     command: ["redis-server", "--appendonly", "yes"]
     hostname: redis
     restart: unless-stopped
 
   rabbit:
     image: rabbitmq:3.8.9-management
+    container_name: rabbit
     ports:
       - "5672:5672"
       - "15672:15672"
