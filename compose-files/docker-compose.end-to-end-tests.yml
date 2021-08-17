@@ -1,14 +1,6 @@
 version: "3"
 
 services:
-  server:
-    command: npm run start
-
-  client:
-    environment:
-      - DOCKER=true
-    command: npm run start
-
   # Selenium Server
   selenium-hub:
     image: selenium/hub:3.141.59-titanium
