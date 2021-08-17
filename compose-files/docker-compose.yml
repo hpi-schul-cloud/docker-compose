@@ -253,7 +253,7 @@ services:
     command: npm start
 
   calendar-init:
-    image: schulcloud/schulcloud-calendar:${CALENDAR_DOCKER_TAG:-latest}
+    image: schulcloud/schulcloud-calendar:${CALENDAR_DOCKER_TAG:-develop_latest}
     build:
       context: ${CALENDAR_PATH:-.keep_empty}
       dockerfile: Dockerfile
