@@ -260,7 +260,7 @@ services:
     init: true
     volumes:
       - 'postgres-init:/docker-entrypoint-initdb.d'
-    command: /bin/sh -c 'pwd && ls -la && mv schema.sql /docker-entrypoint-initdb.d/01-schema.sql && mv example_data.sql /docker-entrypoint-initdb.d/02-data.sql'
+    command: /bin/sh -c 'pwd && ls -la && cp schema.sql /docker-entrypoint-initdb.d/01-schema.sql && cp example_data.sql /docker-entrypoint-initdb.d/02-data.sql'
     
   selenium-hub:
     image: selenium/hub:3.141.59-titanium
