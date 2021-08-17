@@ -10,7 +10,7 @@ docker-compose \
 	-f ${COMPOSE_FILES_PATH}/docker-compose.yml \
 	-f ${COMPOSE_FILES_PATH}/docker-compose.calendar.yml \
 	-f ${COMPOSE_FILES_PATH}/docker-compose.end-to-end-tests.yml \
-	up
+	${@:-up -d}
 
 
 #	-f ./compose-files/docker-compose.calendar.yml \
