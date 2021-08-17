@@ -159,6 +159,7 @@ services:
       - SC_SHORT_TITLE=Schulcloud
       - SC_PRODUCTNAME=Hauptschule
       - SC_FEDERALSTATE=mainstate
+      - DOCKER=true
       # Google
       #- GOOGLE_ANALYTICS_TRACKING_ID="UA-155982548-1"
       # URIs
