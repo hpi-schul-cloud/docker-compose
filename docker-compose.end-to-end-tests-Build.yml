@@ -19,7 +19,7 @@ services:
     restart: unless-stopped
 
   rabbitmq:
-    image: rabbitmq:3
+    image: rabbitmq:3.8.9-management
     ports:
       - 5672:5672
     restart: unless-stopped
