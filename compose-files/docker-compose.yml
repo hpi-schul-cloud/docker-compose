@@ -104,8 +104,9 @@ services:
       # cache_from:
       #   - schulcloud/schulcloud-server:latest
     depends_on:
-      - mongodb
+      - mongosetup
       - redis
+      - rabbit
     environment:
       # ENV
       - NODE_ENV=${NODE_ENV:-development}
