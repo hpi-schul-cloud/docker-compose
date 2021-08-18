@@ -130,7 +130,7 @@ services:
       - calendar
     environment:
       # ENV
-      - NODE_ENV=development
+      - NODE_ENV=${NODE_ENV:-development}
       - HOST=http://localhost:3030
       - SC_TITLE=HPI Schulcloud
       - SC_SHORT_TITLE=Schulcloud
@@ -175,8 +175,7 @@ services:
       - server
     environment:
       # ENV
-      #- TZ=Europe/Berlin      
-      - NODE_ENV=development
+      #- TZ=Europe/Berlin
       # Theme and Titles
       - SC_THEME=default
       - SC_TITLE=HPI Schulcloud
@@ -213,7 +212,7 @@ services:
       - client
     environment:
       # ENV
-      - NODE_ENV=development
+      - NODE_ENV=${NODE_ENV:-development}
       - TZ=Europe/Berlin
       - LEGACY_CLIENT_URL=http://client:3100
       - HOST=0.0.0.0
