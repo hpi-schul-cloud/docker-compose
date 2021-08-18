@@ -245,7 +245,7 @@ services:
       - DB_USERNAME=node
       - DB_DATABASE=schulcloud_calendar
       # Paths
-      - SCHULCLOUD_BASE_PATH=http://server:3030
+      - SCHULCLOUD_BASE_PATH=http://server:3030/api/v1
       - NOTIFICATION_SERVICE_BASE_PATH=http://notification-service:3040
       - NOTIFICATION_SERVICE_NEW_NOTIFICATION=http://notification-service:3040/messages
     restart: unless-stopped
