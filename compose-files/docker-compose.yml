@@ -183,6 +183,7 @@ services:
       - SC_PRODUCTNAME=Hauptschule
       - SC_FEDERALSTATE=mainstate
       - CALENDAR_SERVICE_ENABLED=true
+      - REDIS_URI=redis://redis:6379
       # Google
       #- GOOGLE_ANALYTICS_TRACKING_ID="UA-155982548-1"
       # URIs
