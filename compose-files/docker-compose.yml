@@ -119,8 +119,8 @@ services:
     image: ghcr.io/hpi-schul-cloud/schulcloud-server:${SERVER_DOCKER_TAG}
     container_name: schulcloud-server
     build:
-      context: ../${SERVER_PATH}
-      dockerfile: ../${SERVER_PATH}/Dockerfile
+      context: ${SERVER_PATH}
+      dockerfile: ${SERVER_PATH}/Dockerfile
       # cache_from:
       #   - schulcloud/schulcloud-server:latest
     depends_on:
