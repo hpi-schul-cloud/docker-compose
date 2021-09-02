@@ -119,8 +119,8 @@ services:
     image: ghcr.io/hpi-schul-cloud/schulcloud-server:${SERVER_DOCKER_TAG}
     container_name: schulcloud-server
     build:
-      context: ${SERVER_PATH}
-      dockerfile: ${SERVER_PATH}/Dockerfile
+      context: ../${SERVER_PATH}
+      dockerfile: ../${SERVER_PATH}/Dockerfile
       # cache_from:
       #   - schulcloud/schulcloud-server:latest
     depends_on:
@@ -207,7 +207,7 @@ services:
     image: ghcr.io/hpi-schul-cloud/nuxt-client-default:${NUXT_DOCKER_TAG}
     build:
       context: ${NUXT_PATH}
-      dockerfile: Dockerfile.client
+      dockerfile: ${NUXT_PATH}Dockerfile.client
     depends_on:
       - server
       - client
