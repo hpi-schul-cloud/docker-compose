@@ -120,7 +120,7 @@ services:
     container_name: schulcloud-server
     build:
       context: ${SERVER_PATH}
-      dockerfile: Dockerfile
+      dockerfile: ${SERVER_PATH}/Dockerfile
       # cache_from:
       #   - schulcloud/schulcloud-server:latest
     depends_on:
