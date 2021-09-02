@@ -6,6 +6,7 @@ source ./envs/end-to-end-tests.env
 
 
 docker-compose \
+        --verbose \
 	--env-file ./envs/end-to-end-tests.env \
 	-f ${COMPOSE_FILES_PATH}/docker-compose.yml \
 	${@:-up}
