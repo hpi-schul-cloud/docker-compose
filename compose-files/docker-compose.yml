@@ -179,7 +179,7 @@ services:
     environment:
       # ENV
       - NODE_ENV=${NODE_ENV:-development}
-      - HOST=http://localhost:3030
+      - HOST=http://localhost:3333
       - SC_TITLE=HPI Schulcloud
       - SC_SHORT_TITLE=Schulcloud
       # URIs and Port
@@ -188,7 +188,7 @@ services:
       - REDIS_URI=redis://redis:6379
       - RABBITMQ_URI=amqp://guest:guest@rabbit:5672
       - CONTENT_URI=https://consent.schul-cloud.org #lernstore
-      # - PORT=3030 # will be 3333 anyways
+      - PORT=3333 # will be 3333 anyways
       # AUTH Secret
       # - AUTHENTICATION=
       - IGNORE_DISCOVERABILITY=true
