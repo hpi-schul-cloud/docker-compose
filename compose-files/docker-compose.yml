@@ -164,7 +164,7 @@ services:
     restart: unless-stopped
   server-management:
     image: ghcr.io/hpi-schul-cloud/schulcloud-server:${SERVER_DOCKER_TAG}
-    container_name: schulcloud-server
+    container_name: schulcloud-server-management
     build:
       context: ${SERVER_PATH}
       dockerfile: Dockerfile
