@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 
 Allowed Types of change: `Added`, `Changed`, `Deprecated`, `Removed`, `Fixed`, `Security`
 
+## [26.12.0] - 6-10-21
+
+- BC-25  - added server management service
+
 ## [26.2.0] - 31-05-21
 
 ## [25.6.1] - 09-03-21
