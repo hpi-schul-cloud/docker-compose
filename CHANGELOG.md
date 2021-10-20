@@ -10,6 +10,7 @@ Allowed Types of change: `Added`, `Changed`, `Deprecated`, `Removed`, `Fixed`, `
 ### Added
 
 - BC-25  - added server management service
+- BC-215 - added pseudo S3 key
 
 ## [26.2.0] - 31-05-21
 
