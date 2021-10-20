@@ -206,6 +206,7 @@ services:
       - LERNSTORE_MODE=EDUSHARING
       - CALENDAR_URI=http://calendar:3000
       - CALENDAR_API_KEY=test123
+      - S3_KEY=abcdefghijklmnop
     ports:
       - "3333:3333"
     networks:
