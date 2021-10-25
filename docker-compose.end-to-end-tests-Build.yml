@@ -46,6 +46,7 @@ services:
       ## keys for local s3 storage
       # - AWS_ACCESS_KEY=
       # - AWS_SECRET_ACCESS_KEY=
+      - S3_KEY=<test-encryption-key>
       # URIs and Port
       - MONGO_URI=mongodb://server-mongodb:27017/schulcloud
       - DB_URL=mongodb://server-mongodb:27017/schulcloud
