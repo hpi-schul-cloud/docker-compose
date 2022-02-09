@@ -142,6 +142,7 @@ services:
       - CONTENT_URI=https://consent.schul-cloud.org #lernstore
       - PORT=3030
       # AUTH Secret
+      - LDAP_PASSWORD_ENCRYPTION_KEY=fortestingonly12
       # - AUTHENTICATION=
       - IGNORE_DISCOVERABILITY=true
       # Brute force protection
@@ -192,6 +193,7 @@ services:
       - CONTENT_URI=https://consent.schul-cloud.org #lernstore
       - PORT=3333 # will be 3333 anyways
       # AUTH Secret
+      - LDAP_PASSWORD_ENCRYPTION_KEY=fortestingonly12
       # - AUTHENTICATION=
       - IGNORE_DISCOVERABILITY=true
       # Brute force protection
