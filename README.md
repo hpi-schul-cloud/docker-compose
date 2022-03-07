@@ -1,3 +1,10 @@
+# Deprecated
+The usage of docker compose is deprecated in this project.
+The files will only mainteden for the necessary update that the e2e test runs, so long it's take to move the e2e against the auto deploy applications on the kubernetes cluster for testing.
+
+The Docker compose files are not complied with all parts of the application and services.
+
+
 # Setup HPI-Schul-Cloud
 
 The scripts (e.g. startup_develop.sh) set up an environment for developing with all necassery docker container. The cripts combines the neccassery compose files and can be triggerd with normal docker-compose commands.
