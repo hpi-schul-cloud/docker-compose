@@ -103,10 +103,9 @@ services:
     ports:
       - 1080:1080
       - 1025:1025
-          
   maildrop:
     image: ghcr.io/kaffeekrone/mail-drop:1.0
-    depends_on: 
+    depends_on:
       - mailcatcher
       - rabbit
     environment:
@@ -241,7 +240,7 @@ services:
       #- GOOGLE_ANALYTICS_TRACKING_ID="UA-155982548-1"
       # URIs
       - HOST=http://localhost:3100
-      - BACKEND_URL=http://server:3030/api/
+      - API_HOST=http://server:3030/api
       - PUBLIC_BACKEND_URL=https://localhost:3030/api
       #- LIBRE_OFFICE_CLIENT_URL=http://localhost:9980
       # FEATURE TOGGLES
