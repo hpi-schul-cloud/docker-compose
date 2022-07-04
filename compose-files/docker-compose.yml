@@ -134,12 +134,12 @@ services:
       - SC_TITLE=HPI Schulcloud
       - SC_SHORT_TITLE=Schulcloud
       - FILES_STORAGE__INCOMING_REQUEST_TIMEOUT=6000000
-      - FILE_STORAGE__SERVICE_BASE_URL=http://localhost:4444
-      - FILE_STORAGE__S3_ENDPOINT=http://localhost:9000
-      - FILE_STORAGE__S3_ACCESS_KEY_ID=miniouser
-      - FILE_STORAGE__S3_SECRET_ACCESS_KEY=miniouser
-      - FILE_STORAGE__S3_BUCKET=schulcloud
-      - FILE_STORAGE__S3_REGION=eu-central-1
+      - FILES_STORAGE__SERVICE_BASE_URL=http://localhost:4444
+      - FILES_STORAGE__S3_ENDPOINT=http://localhost:9000
+      - FILES_STORAGE__S3_ACCESS_KEY_ID=miniouser
+      - FILES_STORAGE__S3_SECRET_ACCESS_KEY=miniouser
+      - FILES_STORAGE__S3_BUCKET=schulcloud
+      - FILES_STORAGE__S3_REGION=eu-central-1
       # URIs and Port
       - DB_URL=mongodb://mongodb:27017,mongodb-secondary:27017,mongodb-arbiter:27017/schulcloud?replicaSet=rs0&tls=false&readPreference=secondary
       - DATABASE__URL=mongodb://server-mongodb:27017/schulcloud
