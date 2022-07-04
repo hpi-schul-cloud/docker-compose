@@ -133,6 +133,8 @@ services:
       - HOST=http://localhost:3030
       - SC_TITLE=HPI Schulcloud
       - SC_SHORT_TITLE=Schulcloud
+      - FILES_STORAGE__INCOMING_REQUEST_TIMEOUT=6000000
+      - FILE_STORAGE_BASE_URL=http://localhost:4444
       # URIs and Port
       - DB_URL=mongodb://mongodb:27017,mongodb-secondary:27017,mongodb-arbiter:27017/schulcloud?replicaSet=rs0&tls=false&readPreference=secondary
       - DATABASE__URL=mongodb://server-mongodb:27017/schulcloud
