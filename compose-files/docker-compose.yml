@@ -133,6 +133,7 @@ services:
       - HOST=http://localhost:3030
       - SC_TITLE=HPI Schulcloud
       - SC_SHORT_TITLE=Schulcloud
+      # ENV new file service - please not no minio is deployed but env must be set, they are required
       - FILES_STORAGE__INCOMING_REQUEST_TIMEOUT=6000000
       - FILES_STORAGE__SERVICE_BASE_URL=http://localhost:4444
       - FILES_STORAGE__S3_ENDPOINT=http://localhost:9000
