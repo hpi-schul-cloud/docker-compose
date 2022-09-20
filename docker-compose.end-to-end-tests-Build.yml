@@ -92,7 +92,7 @@ services:
       - server
     environment:
       # ENV
-      - NODE_ENV=development
+      - NODE_ENV=production
       - DOCKER=true
       - CALENDAR_SERVICE_ENABLED=true
       #- TZ=Europe/Berlin
