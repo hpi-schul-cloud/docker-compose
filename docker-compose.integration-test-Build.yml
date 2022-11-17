@@ -28,6 +28,7 @@ services:
       # ENV
       - NODE_ENV=production
       - HOST=http://localhost:3030
+      - SC_DOMAIN=localhost
       - SC_TITLE=HPI Schulcloud
       - SC_SHORT_TITLE=Schulcloud
       # SMTP
