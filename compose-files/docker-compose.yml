@@ -131,6 +131,7 @@ services:
       # ENV
       - NODE_ENV=${NODE_ENV:-development}
       - HOST=http://localhost:3030
+      - SC_DOMAIN=localhost
       - SC_TITLE=HPI Schulcloud
       - SC_SHORT_TITLE=Schulcloud
       # ENV new file service - please not no minio is deployed but env must be set, they are required
@@ -190,6 +191,7 @@ services:
       # ENV
       - NODE_ENV=${NODE_ENV:-development}
       - HOST=http://localhost:3333
+      - SC_DOMAIN=localhost
       - SC_TITLE=HPI Schulcloud
       - SC_SHORT_TITLE=Schulcloud
       # ENV new file service - please not no minio is deployed but env must be set, they are required
