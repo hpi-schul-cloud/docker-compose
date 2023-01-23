@@ -287,7 +287,7 @@ services:
       - TZ=Europe/Berlin
       - LEGACY_CLIENT_URL=http://client:3100
       - HOST=0.0.0.0
-      - API_URL=http://server:3030/api
+      - API_URL=${API_URL:-http://server:3030/api}
       # FEATURE TOGGLES
       - FEATURE_TEAMS_ENABLED=true
       - LERNSTORE_MODE=EDUSHARING
