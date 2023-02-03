@@ -287,7 +287,7 @@ services:
       - TZ=Europe/Berlin
       - LEGACY_CLIENT_URL=http://client:3100
       - HOST=0.0.0.0
-      - API_URL=http://server:3030/api
+      - API_URL=${API_URL:-http://server:3030/api}
       # FEATURE TOGGLES
       - FEATURE_TEAMS_ENABLED=true
       - LERNSTORE_MODE=EDUSHARING
@@ -333,12 +333,14 @@ services:
     command: /bin/sh -c 'cp schema.sql /docker-entrypoint-initdb.d/01-schema.sql && cp example_data.sql /docker-entrypoint-initdb.d/02-data.sql'
     
   selenium-hub:
-    image: selenium/hub:3.141.59-titanium
+    image: selenium/hub:4.7.2
     container_name: selenium-hub
     ports:
+      - "4442:4442"
+      - "4443:4443"
       - "4444:4444"
   chrome:
-    image: selenium/node-chrome:3.141.59-titanium
+    image: selenium/node-chrome:4.7.2
     volumes:
       - /dev/shm:/dev/shm
     depends_on:
@@ -346,6 +348,9 @@ services:
     environment:
       - HUB_HOST=selenium-hub
       - HUB_PORT=4444
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
 
   ###
 networks:
