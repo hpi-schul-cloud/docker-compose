@@ -58,6 +58,7 @@ services:
       - LOGIN_BLOCK_TIME=3
       # FEATURE TOGGLES
       - LERNSTORE_MODE=LEGACY
+      - PUBLIC_BACKEND_URL=http://server:3030/api
     ports:
       - "3030:3030"
       - "5959:5959"
@@ -89,7 +90,7 @@ services:
       # URIs
       - HOST=http://localhost:3100
       - API_HOST=http://server:3030/api
-      - PUBLIC_BACKEND_URL=https://localhost:3030
+      - PUBLIC_BACKEND_URL=http://server:3030/api
       # - LIBRE_OFFICE_CLIENT_URL=http://localhost:9980
       # - ROCKET_CHAT_URI=https://chat.schulcloud.local
       # FEATURE TOGGLES
