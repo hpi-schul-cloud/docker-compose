@@ -58,7 +58,7 @@ services:
       - LOGIN_BLOCK_TIME=3
       # FEATURE TOGGLES
       - LERNSTORE_MODE=LEGACY
-      - PUBLIC_BACKEND_URL=http://localhost:3030/api
+      - PUBLIC_BACKEND_URL=http://server:3030/api
     ports:
       - "3030:3030"
       - "5959:5959"
