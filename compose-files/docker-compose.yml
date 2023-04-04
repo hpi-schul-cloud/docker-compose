@@ -227,6 +227,12 @@ services:
       - CALENDAR_URI=http://calendar:3000
       - CALENDAR_API_KEY=test123
       - S3_KEY=abcdefghijklmnop
+      # fwu learning contents
+      - FWU_CONTENT__S3_ENDPOINT=http://localhost:4568
+      - FWU_CONTENT__S3_ACCESS_KEY=S3RVER
+      - FWU_CONTENT__S3_SECRET_KEY=S3RVER
+      - FWU_CONTENT__S3_BUCKET=fwu-content
+      - FWU_CONTENT__S3_REGION=eu-central-1
     ports:
       - "3333:3333"
     networks:
