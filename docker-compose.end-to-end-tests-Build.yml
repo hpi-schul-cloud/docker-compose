@@ -76,6 +76,8 @@ services:
       - FILES_STORAGE__S3_SECRET_ACCESS_KEY=miniouser
       - FILES_STORAGE__S3_BUCKET=schulcloud
       - FILES_STORAGE__S3_REGION=eu-central-1
+      - CLAMAV__SERVICE_HOSTNAME=localhost
+      - CLAMAV__SERVICE_PORT=3310
       - PUBLIC_BACKEND_URL=http://server:3030/api
       # fwu learning contents
       - FWU_CONTENT__S3_ENDPOINT=http://localhost:4568
