@@ -297,6 +297,7 @@ services:
       - API_URL=${API_URL:-http://server:3030/api}
       - H5P_FRAME_SRC_URLS=https://www.website.com
       - H5P_SCRIPT_SRC_URLS=https://www.website.com
+      - H5P_IMG_SRC_URLS=https://www.website.com
       # FEATURE TOGGLES
       - FEATURE_TEAMS_ENABLED=true
       - LERNSTORE_MODE=EDUSHARING
