@@ -129,6 +129,7 @@ services:
       - calendar
     environment:
       # ENV
+      - EXIT_ON_ERROR=false
       - NODE_ENV=${NODE_ENV:-development}
       - HOST=http://localhost:3030
       - SC_DOMAIN=localhost
