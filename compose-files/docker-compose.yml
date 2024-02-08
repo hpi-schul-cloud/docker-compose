@@ -129,6 +129,7 @@ services:
       - calendar
     environment:
       # ENV
+      - EXIT_ON_ERROR=false
       - NODE_ENV=${NODE_ENV:-development}
       - HOST=http://localhost:3030
       - SC_DOMAIN=localhost
@@ -142,6 +143,8 @@ services:
       - FILES_STORAGE__S3_SECRET_ACCESS_KEY=miniouser
       - FILES_STORAGE__S3_BUCKET=schulcloud
       - FILES_STORAGE__S3_REGION=eu-central-1
+      - CLAMAV__SERVICE_HOSTNAME=localhost
+      - CLAMAV__SERVICE_PORT=3310
       # URIs and Port
       - DB_URL=mongodb://mongodb:27017,mongodb-secondary:27017,mongodb-arbiter:27017/schulcloud?replicaSet=rs0&tls=false&readPreference=secondary
       - DATABASE__URL=mongodb://server-mongodb:27017/schulcloud
