@@ -33,6 +33,7 @@ services:
       - rabbitmq
     environment:
       # ENV
+      - EXIT_ON_ERROR=false
       - NODE_ENV=production
       - HOST=http://localhost:3030
       - SC_DOMAIN=localhost
