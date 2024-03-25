@@ -306,8 +306,6 @@ services:
       - LERNSTORE_MODE=EDUSHARING
       # Theme and Titles
       - SC_THEME=default
-      # Due to missing file service config load needs to be optional
-      - VUE_APP_OPTIONAL_CONFIG=true
     ports:
       - "4000:4000"
     restart: unless-stopped
