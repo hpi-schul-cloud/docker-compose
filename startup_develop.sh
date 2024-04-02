@@ -10,7 +10,7 @@ echo "$MY_DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
 [ -n "${NOTIFICATION_SERVICE_PATH}" ] || docker pull schulcloud/node-notification-service:${NOTIFICATION_SERVICE_DOCKER_TAG}
 [ -n "${CALENDAR_PATH}" ] || docker pull schulcloud/schulcloud-calendar:${CALENDAR_DOCKER_TAG:-latest}
 
-docker-compose \
+docker compose \
 	--env-file ./envs/develop.env \
 	-f ${COMPOSE_FILES_PATH}/docker-compose.yml \
 	-f ${COMPOSE_FILES_PATH}/docker-compose.ldap.yml \
