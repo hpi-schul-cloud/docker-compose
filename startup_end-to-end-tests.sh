@@ -5,7 +5,7 @@ source ./envs/end-to-end-tests.env
 [ -f ./envs/.env ] && source ./envs/.env
 
 
-docker-compose \
+docker compose \
 	--env-file ./envs/end-to-end-tests.env \
 	-f ${COMPOSE_FILES_PATH}/docker-compose.yml \
 	${@:-up}
