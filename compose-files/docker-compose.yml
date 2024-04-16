@@ -20,7 +20,7 @@ services:
 
   ### Schul-Cloud Server
   ###
-  mongodb:
+  mongodb-primary:
     image: mongo:5.0.26 ## change tag in version.env
     container_name: mongodb-primary
     ports:
@@ -58,7 +58,7 @@ services:
   mongosetup:
     image: mongo:5.0.26
     depends_on:
-      - mongodb
+      - mongodb-primary
       - mongodb-secondary
       - mongodb-arbiter
     volumes:
@@ -146,7 +146,7 @@ services:
       - CLAMAV__SERVICE_HOSTNAME=localhost
       - CLAMAV__SERVICE_PORT=3310
       # URIs and Port
-      - DB_URL=mongodb://mongodb:27017,mongodb-secondary:27017,mongodb-arbiter:27017/schulcloud?replicaSet=rs0&tls=false&readPreference=secondary
+      - DB_URL=mongodb://mongodb-primary:27017,mongodb-secondary:27017,mongodb-arbiter:27017/schulcloud?replicaSet=rs0&tls=false&readPreference=secondary
       - DATABASE__URL=mongodb://server-mongodb:27017/schulcloud
       - REDIS_URI=redis://redis:6379
       - RABBITMQ_URI=amqp://guest:guest@rabbit:5672
@@ -207,7 +207,7 @@ services:
       - FILES_STORAGE__S3_BUCKET=schulcloud
       - FILES_STORAGE__S3_REGION=eu-central-1
       # URIs and Port
-      - DB_URL=mongodb://mongodb:27017,mongodb-secondary:27017,mongodb-arbiter:27017/schulcloud?replicaSet=rs0&tls=false&readPreference=secondary
+      - DB_URL=mongodb://mongodb-primary:27017,mongodb-secondary:27017,mongodb-arbiter:27017/schulcloud?replicaSet=rs0&tls=false&readPreference=secondary
       - DATABASE__URL=mongodb://server-mongodb:27017/schulcloud
       - REDIS_URI=redis://redis:6379
       - RABBITMQ_URI=amqp://guest:guest@rabbit:5672
