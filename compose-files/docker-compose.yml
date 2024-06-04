@@ -1,8 +1,6 @@
-version: "3.2"
+version: '3.2'
 
 services:
-
-
   ### nginx
   #nginx:
   #  image: nginx
@@ -24,7 +22,7 @@ services:
     image: mongo:5.0.26 ## change tag in version.env
     container_name: mongodb-primary
     ports:
-      - "27017:27017"
+      - '27017:27017'
     volumes:
       - data-mongodb-primary:/data/db
     depends_on:
@@ -37,8 +35,8 @@ services:
     image: mongo:5.0.26 ## change tag in version.env
     container_name: mongodb-secondary
     ports:
-      - "27017"
-      - "27018:27017"
+      - '27017'
+      - '27018:27017'
     volumes:
       - data-mongodb-secondary:/data/db
     restart: unless-stopped
@@ -48,8 +46,8 @@ services:
     image: mongo:5.0.26 ## change tag in version.env
     container_name: mongodb-arbiter
     ports:
-      - "27017"
-      - "27019:27017"
+      - '27017'
+      - '27019:27017'
     volumes:
       - data-mongodb-arbiter:/data/db
     restart: unless-stopped
@@ -63,13 +61,13 @@ services:
       - mongodb-arbiter
     volumes:
       - ../scripts/mongo_setup.sh:/scripts/mongo_setup.sh
-    restart: "no"
-    entrypoint: [ "bash", "/scripts/mongo_setup.sh" ]
+    restart: 'no'
+    entrypoint: ['bash', '/scripts/mongo_setup.sh']
 
   redis:
     image: redis:${REDIS_DOCKER_TAG:-latest} ## change tag in version.env
     container_name: redis
-    command: ["redis-server", "--appendonly", "yes"]
+    command: ['redis-server', '--appendonly', 'yes']
     hostname: redis
     restart: unless-stopped
 
@@ -77,8 +75,8 @@ services:
     image: rabbitmq:3.8.9-management
     container_name: rabbit
     ports:
-      - "5672:5672"
-      - "15672:15672"
+      - '5672:5672'
+      - '15672:15672'
 
   ### Schul-Cloud Calendar
   ###
@@ -87,7 +85,7 @@ services:
     depends_on:
       - calendar-init
     ports:
-      - "5432:5432"
+      - '5432:5432'
     volumes:
       - 'data-calendar-postgres:/var/lib/postgresql/data'
       - 'postgres-init:/docker-entrypoint-initdb.d'
@@ -145,6 +143,8 @@ services:
       - FILES_STORAGE__S3_REGION=eu-central-1
       - CLAMAV__SERVICE_HOSTNAME=localhost
       - CLAMAV__SERVICE_PORT=3310
+      # ENV for new side menu
+      - FEATURE_NEW_LAYOUT_ENABLED=true
       # URIs and Port
       - DB_URL=mongodb://mongodb-primary:27017,mongodb-secondary:27017,mongodb-arbiter:27017/schulcloud?replicaSet=rs0&tls=false
       - REDIS_URI=redis://redis:6379
@@ -170,7 +170,7 @@ services:
       - S3_KEY=abcdefghijklmnop
       - PUBLIC_BACKEND_URL=http://server:3030/api
     ports:
-      - "3030:3030"
+      - '3030:3030'
     networks:
       - storage
       - default
@@ -235,7 +235,7 @@ services:
       - FWU_CONTENT__S3_BUCKET=fwu-content
       - FWU_CONTENT__S3_REGION=eu-central-1
     ports:
-      - "3333:3333"
+      - '3333:3333'
     networks:
       - storage
       - default
@@ -262,6 +262,8 @@ services:
       - SC_FEDERALSTATE=mainstate
       - CALENDAR_SERVICE_ENABLED=true
       - REDIS_URI=redis://redis:6379
+      # ENV for new side menu
+      - FEATURE_NEW_LAYOUT_ENABLED=true
       # Google
       #- GOOGLE_ANALYTICS_TRACKING_ID="UA-155982548-1"
       # URIs
@@ -277,7 +279,7 @@ services:
       # BRUTE FORCE PROTECTION
       - LOGIN_BLOCK_TIME=3
     ports:
-      - "3100:3100"
+      - '3100:3100'
     restart: unless-stopped
   ###
 
@@ -305,7 +307,7 @@ services:
       # Theme and Titles
       - SC_THEME=default
     ports:
-      - "4000:4000"
+      - '4000:4000'
     restart: unless-stopped
 
   calendar:
@@ -314,7 +316,7 @@ services:
       context: ${CALENDAR_PATH:-.keep_empty}
       dockerfile: Dockerfile
     ports:
-      - "3000:3000"
+      - '3000:3000'
     depends_on:
       - calendar-postgres
     environment:
@@ -347,9 +349,9 @@ services:
     image: selenium/hub:4.7.2
     container_name: selenium-hub
     ports:
-      - "4442:4442"
-      - "4443:4443"
-      - "4444:4444"
+      - '4442:4442'
+      - '4443:4443'
+      - '4444:4444'
   chrome:
     image: selenium/node-chrome:4.7.2
     volumes:
@@ -369,7 +371,7 @@ networks:
     ipam:
       driver: default
       config:
-        - subnet: "172.16.13.0/24"
+        - subnet: '172.16.13.0/24'
 
 volumes:
   data-mongodb-primary:
