@@ -169,6 +169,8 @@ services:
       - CALENDAR_API_KEY=test123
       - S3_KEY=abcdefghijklmnop
       - PUBLIC_BACKEND_URL=http://server:3030/api
+      # ETHERPAD
+      - ETHERPAD__PAD_URI=http://localhost:9001/p
     ports:
       - "3030:3030"
     networks:
@@ -234,6 +236,8 @@ services:
       - FWU_CONTENT__S3_SECRET_KEY=S3RVER
       - FWU_CONTENT__S3_BUCKET=fwu-content
       - FWU_CONTENT__S3_REGION=eu-central-1
+       # ETHERPAD
+      - ETHERPAD__PAD_URI=http://localhost:9001/p
     ports:
       - "3333:3333"
     networks:
