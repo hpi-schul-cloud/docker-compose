@@ -1,6 +1,8 @@
 version: "3.2"
 
 services:
+
+
   ### nginx
   #nginx:
   #  image: nginx
@@ -62,7 +64,7 @@ services:
     volumes:
       - ../scripts/mongo_setup.sh:/scripts/mongo_setup.sh
     restart: "no"
-    entrypoint: ["bash", "/scripts/mongo_setup.sh"]
+    entrypoint: [ bash", "/scripts/mongo_setup.sh" ]
 
   redis:
     image: redis:${REDIS_DOCKER_TAG:-latest} ## change tag in version.env
@@ -87,8 +89,8 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - "data-calendar-postgres:/var/lib/postgresql/data"
-      - "postgres-init:/docker-entrypoint-initdb.d"
+      - 'data-calendar-postgres:/var/lib/postgresql/data'
+      - 'postgres-init:/docker-entrypoint-initdb.d'
     environment:
       - POSTGRES_DB=schulcloud_calendar
       - POSTGRES_USER=node
@@ -342,7 +344,7 @@ services:
       dockerfile: Dockerfile
     init: true
     volumes:
-      - "postgres-init:/docker-entrypoint-initdb.d"
+      - 'postgres-init:/docker-entrypoint-initdb.d'
     command: /bin/sh -c 'cp schema.sql /docker-entrypoint-initdb.d/01-schema.sql && cp example_data.sql /docker-entrypoint-initdb.d/02-data.sql'
 
   selenium-hub:
