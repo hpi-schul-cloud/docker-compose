@@ -145,6 +145,8 @@ services:
       - FILES_STORAGE__S3_REGION=eu-central-1
       - CLAMAV__SERVICE_HOSTNAME=localhost
       - CLAMAV__SERVICE_PORT=3310
+      # ENV for new side menu
+      - FEATURE_NEW_LAYOUT_ENABLED=true
       # URIs and Port
       - DB_URL=mongodb://mongodb-primary:27017,mongodb-secondary:27017,mongodb-arbiter:27017/schulcloud?replicaSet=rs0&tls=false
       - REDIS_URI=redis://redis:6379
@@ -266,6 +268,8 @@ services:
       - SC_FEDERALSTATE=mainstate
       - CALENDAR_SERVICE_ENABLED=true
       - REDIS_URI=redis://redis:6379
+      # ENV for new side menu
+      - FEATURE_NEW_LAYOUT_ENABLED=true
       # Google
       #- GOOGLE_ANALYTICS_TRACKING_ID="UA-155982548-1"
       # URIs
