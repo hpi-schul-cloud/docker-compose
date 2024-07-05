@@ -21,7 +21,7 @@ services:
   ### Schul-Cloud Server
   ###
   mongodb-primary:
-    image: mongo:6.0.15 ## change tag in version.env
+    image: mongo:6.0.15
     container_name: mongodb-primary
     ports:
       - "27017:27017"
@@ -34,7 +34,7 @@ services:
     command: --bind_ip_all --replSet rs0
 
   mongodb-secondary:
-    image: mongo:6.0.15 ## change tag in version.env
+    image: mongo:6.0.15
     container_name: mongodb-secondary
     ports:
       - "27017"
@@ -45,7 +45,7 @@ services:
     command: --bind_ip_all --replSet rs0
 
   mongodb-arbiter:
-    image: mongo:6.0.15 ## change tag in version.env
+    image: mongo:6.0.15
     container_name: mongodb-arbiter
     ports:
       - "27017"
@@ -67,7 +67,7 @@ services:
     entrypoint: [ "bash", "/scripts/mongo_setup.sh" ]
 
   redis:
-    image: redis:${REDIS_DOCKER_TAG:-latest} ## change tag in version.env
+    image: redis:${REDIS_DOCKER_TAG:-latest}
     container_name: redis
     command: ["redis-server", "--appendonly", "yes"]
     hostname: redis
