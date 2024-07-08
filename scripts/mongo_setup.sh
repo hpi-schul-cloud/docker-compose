@@ -2,8 +2,8 @@
 sleep 10
 
 echo SETUP.sh time now: `date +"%T" `
-mongo --host mongodb-primary:27017 --eval 'rs.initiate({_id: "rs0", members: [{_id: 0, host: "mongodb-primary:27017" }]})'
-mongo --host mongodb-primary:27017 << EOF
+mongosh --host mongodb-primary:27017 --eval 'rs.initiate({_id: "rs0", members: [{_id: 0, host: "mongodb-primary:27017" }]})'
+mongosh --host mongodb-primary:27017 << EOF
   var cfg = {
     "_id": "rs0",
     "version": 1,
