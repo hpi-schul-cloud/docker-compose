@@ -21,7 +21,7 @@ services:
   ### Schul-Cloud Server
   ###
   mongodb-primary:
-    image: mongo:6.0.15
+    image: mongo:6.0.16
     container_name: mongodb-primary
     ports:
       - "27017:27017"
@@ -34,7 +34,7 @@ services:
     command: --bind_ip_all --replSet rs0
 
   mongodb-secondary:
-    image: mongo:6.0.15
+    image: mongo:6.0.16
     container_name: mongodb-secondary
     ports:
       - "27017"
@@ -45,7 +45,7 @@ services:
     command: --bind_ip_all --replSet rs0
 
   mongodb-arbiter:
-    image: mongo:6.0.15
+    image: mongo:6.0.16
     container_name: mongodb-arbiter
     ports:
       - "27017"
@@ -56,7 +56,7 @@ services:
     command: --bind_ip_all --replSet rs0
 
   mongosetup:
-    image: mongo:6.0.15
+    image: mongo:6.0.16
     depends_on:
       - mongodb-primary
       - mongodb-secondary
